@@ -1,0 +1,55 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+target/
+build/
+
+# Maven
+log/
+*.log
+
+# Spring Boot
+application-local.properties
+application-dev.properties
+
+# Node / Frontend
+node_modules/
+dist/
+build/
+.env
+.env.local
+
+# Mobile
+*.apk
+*.ipa
+*.keystore
+*.jks
+gradle/
+.gradle/
+local.properties
+
+# Docker
+*.tar
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+test-output/
+
+# Documentation
+docs/**/*.tmp
