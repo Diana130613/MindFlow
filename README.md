@@ -118,7 +118,8 @@ Postman коллекция: docs/09-api/postman-collection.json
 
 |                      Папка                      |                 Содержание               | 
 |-------------------------------------------------|--------------------------------------- --|
-| [00-project-charter/](docs/00-project-charter/) | Паспорт проекта, IDEF0, BUC, SWOT, ROI   | 
+| [00-project-charter/](docs/00-project-charter/) 
+| Паспорт проекта, IDEF0, BUC, SWOT, ROI   | 
 | [01-requirements/](docs/01-requirements/)       | Use Case, Domain Model, трассировка      | 
 | [02-architecture/](docs/02-architecture/)       | PCMEF, ADR, интерфейсы                   | 
 | [03-database/](docs/03-database/)               | ER-диаграмма, DDL, ORM                   | 
