@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: mindflow_postgres
+    environment:
+      POSTGRES_DB: mindflow_db
+      POSTGRES_USER: mindflow_user
+      POSTGRES_PASSWORD: mindflow_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - mindflow_data:/var/lib/postgresql/data
+
+volumes:
+  mindflow_data:
