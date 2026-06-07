@@ -7,6 +7,7 @@ import ru.mindflow.backend.dto.*;
 import ru.mindflow.backend.entity.*;
 import ru.mindflow.backend.foundation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -47,7 +48,9 @@ public class MoodServiceImpl implements MoodService {
     @Override
     @Transactional(readOnly = true)
     public MoodEntryDto getToday(Long userId) {
-        return moodEntryRepository.findTodayEntry(userId)
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        return moodEntryRepository.findTodayEntry(userId, startOfDay, endOfDay)
                 .map(this::toDto)
                 .orElse(null);
     }

@@ -37,7 +37,12 @@ public interface MoodEntryRepository
     @Query("""
         SELECT m FROM MoodEntry m
         WHERE m.user.id = :userId
-        AND DATE(m.recordedAt) = CURRENT_DATE
+        AND m.recordedAt >= :startOfDay
+        AND m.recordedAt < :endOfDay
     """)
-    Optional<MoodEntry> findTodayEntry(@Param("userId") Long userId);
+    Optional<MoodEntry> findTodayEntry(
+            @Param("userId") Long userId,
+            @Param("startOfDay") LocalDateTime startOfDay,
+            @Param("endOfDay") LocalDateTime endOfDay
+    );
 }
