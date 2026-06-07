@@ -35,4 +35,55 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Mood
+    public List<MoodEntryDto> getHistory(Long userId, int days) {
+        LocalDateTime from = LocalDateTime.now().minusDays(days);
+        return moodEntryRepository
+                .findByUserIdAndPeriod(userId, from)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MoodEntryDto getToday(Long userId) {
+        return moodEntryRepository.findTodayEntry(userId)
+                .map(this::toDto)
+                .orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id, Long userId) {
+        MoodEntry entry = moodEntryRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Запись не найдена: " + id));
+
+        if (!entry.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException(
+                    "Нет прав для удаления этой записи"
+            );
+        }
+
+        moodEntryRepository.delete(entry);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double getAverage(Long userId, int days) {
+        LocalDateTime from = LocalDateTime.now().minusDays(days);
+        return moodEntryRepository
+                .getAverageScore(userId, from)
+                .orElse(0.0);
+    }
+
+    private MoodEntryDto toDto(MoodEntry entry) {
+        return new MoodEntryDto(
+                entry.getId(),
+                entry.getScore(),
+                entry.getNote(),
+                entry.getMoodLabel(),
+                entry.getRecordedAt()
+        );
+    }
+}
