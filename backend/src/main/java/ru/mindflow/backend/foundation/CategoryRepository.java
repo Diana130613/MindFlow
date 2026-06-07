@@ -1,0 +1,7 @@
+package ru.mindflow.backend.foundation;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.mindflow.backend.entity.Category;
+
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+}
