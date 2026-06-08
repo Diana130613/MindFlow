@@ -1,281 +1,186 @@
-<<<<<<< HEAD
-# [Название курсового проекта]
+# MindFlow — Мобильное приложение для ментального здоровья и медитации
 
-**Автор:** [ФИО]  
-**Группа:** [номер]  
-**Траектория:** [Desktop / Web / Mobile / Enterprise]  
-**Дата начала:** [ДД.ММ.ГГГГ]  
-**Дата сдачи:** [ДД.ММ.ГГГГ]
-```
-
-## Описание проекта
-
-[2-3 предложения о том, что делает система]
-
-**Пример:**  
-Система управления мероприятиями (Event Management System) — это веб-приложение для организации и проведения мероприятий. Позволяет организаторам создавать мероприятия, управлять регистрацией участников и формировать отчёты.
-
-```
-##  Траектория выполнения
-
-- [x] **Веб-разработка** (React + Spring Boot)
-- [ ] Десктоп
-- [ ] Мобильная
-- [ ] Enterprise
-
-```
-
-## Технологический стек
-
-| Компонент       |            Технология              |
-|-----------------|------------------------------------|
-| Бэкенд          | Java 17, Spring Boot 3, PostgreSQL |
-| Фронтенд        | React 18, TypeScript, Axios        |
-| API             | REST, OpenAPI (Swagger)            |
-| Безопасность    | JWT, BCrypt                        |
-| Сборка          | Maven, Vite                        |
-| Контейнеризация | Docker (опционально)               |
-| Инструменты     | Git, Postman, JaCoCo, SonarQube    |
-
-```
-
-##  Требования к окружению
-
-| Требование           | Версия |
-|----------------------|--------|
-| Java JDK             |   17+  |
-| Node.js              |   18+  |
-| PostgreSQL           |   15+  |
-| Maven                |   3.8+ |
-| Docker (опционально) |   20+  |
-
-
-
-## Установка и запуск
-
-### 1. Клонирование репозитория
-
-
-```bash
-git clone https://github.com/username/course-project.git
-cd course-project
-
-```
-
-### 2. Запуск бэкенда
-
-```bash
-cd backend
-./mvnw spring-boot:run
-
-
-Сервер запустится на http://localhost:8080
-
-Swagger UI: http://localhost:8080/swagger-ui.html
-
-```
-### 3. Запуск фронтенда
-
-```bash
-cd frontend
-npm install
-npm run dev
-
-
-Приложение откроется на http://localhost:5173
-```
- ### 4. Запуск через Docker (опциональной) 
- 
-```bash
-docker-compose up -d
-
-```
- ### 5. API Endpoints
-
-Базовый URL: http://localhost:8080/api
-
-
-|  Метод |         Эндпоинт      | Описание                   |    Доступ   |
-|--------|-----------------------|----------------------------|-------------|
-| POST   | /auth/login           | Вход в систему             | Публичный   |
-| POST   | /auth/register        | Регистрация пользователя   | Публичный   |
-| GET    | /events               | Список мероприятий         | USER, ADMIN |
-| GET    | /events/{id}          | Детали мероприятия         | USER, ADMIN |
-| POST   | /events               | Создание мероприятия       | ADMIN       |
-| PUT    | /events/{id}          | Обновление мероприятия     | ADMIN       |
-| DELETE | /events/{id}          | Удаление мероприятия       | ADMIN       |
-| POST   | /events/{id}/register | Регистрация на мероприятие | USER        |
-| GET    | /users/me             | Профиль пользователя       | USER        |
-
-Полная документация API: [Swagger UI](http://localhost:8080/swagger-ui.html)  
-Postman коллекция: docs/09-api/postman-collection.json
-
-
-
-### 6. Структура документации
-
-Вся документация находится в папке [docs/](docs/):
-
-
- [00-project-charter/](docs/00-project-charter/) 
-| Паспорт проекта, IDEF0, BUC, SWOT, ROI   | 
-| [01-requirements/](docs/01-requirements/)       
-| Use Case, Domain Model, трассировка      | 
-| [02-architecture/](docs/02-architecture/)       
-| PCMEF, ADR, интерфейсы                   | 
-| [03-database/](docs/03-database/)               
-| ER-диаграмма, DDL, ORM                   | 
-| [04-detailed-design/](docs/04-detailed-design/) 
-| Sequence диаграммы, спецификация методов | 
-| [05-implementation/](docs/05-implementation/)  
-| Реализация слоёв                         | 
-| [06-testing/](docs/06-testing/)                
-| Тест-планы, JaCoCo, Postman              | 
-| [07-refactoring/](docs/07-refactoring/)        
-| «Запахи кода», Data Mapper, Identity Map | 
-| [08-ui/](docs/08-ui/)                          
-| Скриншоты интерфейсов                    | 
-| [09-api/](docs/09-api/)                        
-| OpenAPI, Swagger                         | 
-| [10-deployment/](docs/10-deployment/)          
-| Docker, CI/CD, администрирование         | 
-| [11-user-guide/](docs/11-user-guide/)          
-| Руководство пользователя                 | 
-| [12-final-report/](docs/12-final-report/)       
-| Пояснительная записка, презентация       | 
-
-
-
- ### 7.Архитектура (PCMEF)
-
-Система построена на архитектурном паттерне PCMEF (Presentation-Control-Mediator-Entity-Foundation).
-
-Распределение слоёв:
-
-|       Слой       |    Расположение |     Ответственность          |
-|------------------|-----------------|------------------------------|
-| Presentation (P) | React (браузер) | UI, отображение, ввод данных |
-| Control (C)      | Spring Boot     | REST API, валидация DTO      |
-| Mediator (M)     | Spring Boot     | Бизнес-логика, транзакции    |
-| Entity (E)       | Spring Boot     | JPA-сущности                 |
-| Foundation (F)   | Spring Boot     | Репозитории, доступ к БД     |
-
-![Диаграмма пакетов PCMEF](docs/02-architecture/diagrams/package-diagram.png)
-
-Ключевые ADR:  
-- [ADR-001: Выбор архитектурного паттерна](docs/02-architecture/adr/adr-001.md)  
-- [ADR-002: Выбор базы данных и ORM](docs/02-architecture/adr/adr-002.md)  
-- [ADR-003: Стратегия аутентификации](docs/02-architecture/adr/adr-003.md)
+**Автор:** Хатуаева Дайана  
+**Группа:** ПИЖ-б-о-23-2  
+**Траектория:** В — Мобильная разработка  
+**Дата начала:** 01.05.2026  
+**Дата сдачи:** 30.05.2026
 
 ---
 
- ### 8. Статистика разработки
-
- Git метрики
-
-|          Метрика |                  Значение        |
-|---------------------------|-------------------------|
-| Всего коммитов            | 47                      |
-| Период разработки         | 01.03.2026 – 30.05.2026 |
-| Средняя частота           | 2.9 коммита/неделю      |
-| Покрытие тестами (JaCoCo) | 42%                     |
-
- График активности
-
-![Commit Activity](docs/images/git-commit-activity.png)
-
-Рисунок 1 — Активность коммитов в течение семестра
-
- Тепловая карта
-
-![Punch Card](docs/images/git-punch-card.png)
-
-Рисунок 2 — Распределение коммитов по дням и часам
-
-
-
- ### 9. Авторы
-
-- [Фамилия Имя] — разработчик, документация  
-  Группа [номер], email: [email], GitHub: [username]
-
-
-
- ## Лицензия
-
-MIT License
-Этот проект распространяется под лицензией MIT. Подробности в файле [LICENSE](LICENSE).
-
-
-
-
- 🔗 Полезные ссылки
-
-- [Репозиторий проекта](https://github.com/username/course-project)
-- [Документация (docs/)](docs/)
-- [Swagger UI](http://localhost:8080/swagger-ui.html)
-- [Postman коллекция](docs/09-api/postman-collection.json)
-
-
-
-=======
-# [Название курсового проекта]
-
-**Автор:** [ФИО]  
-**Группа:** [номер]  
-**Траектория:** [Desktop / Web / Mobile / Enterprise]  
-**Дата начала:** [ДД.ММ.ГГГГ]  
-**Дата сдачи:** [ДД.ММ.ГГГГ]
-
-
 ## Описание проекта
 
-[2-3 предложения о том, что делает система]
+MindFlow — мобильное приложение для Android, предназначенное для поддержки ментального здоровья пользователей. Система предоставляет библиотеку guided-медитаций, упражнения по дыхательным практикам и дневник настроения с визуализацией динамики эмоционального состояния. Приложение работает в офлайн-режиме с автоматической синхронизацией данных при восстановлении соединения.
 
-**Пример:**  
-Система управления мероприятиями (Event Management System) — это веб-приложение для организации и проведения мероприятий. Позволяет организаторам создавать мероприятия, управлять регистрацией участников и формировать отчёты.
+---
 
+## Траектория выполнения
 
-##  Траектория выполнения
+- [ ] Десктопная (JavaFX/Swing)
+- [ ] Веб-ориентированная (Spring MVC / React)
+- [x] **Мобильная (Android Kotlin + Spring Boot)** ← *выбрана*
+- [ ] Enterprise (Full Stack)
 
-- [x] **Веб-разработка** (React + Spring Boot)
-- [ ] Десктоп
-- [ ] Мобильная
-- [ ] Enterprise
-
-
+---
 
 ## Технологический стек
 
-| Компонент       |            Технология              |
-|-----------------|------------------------------------|
-| Бэкенд          | Java 17, Spring Boot 3, PostgreSQL |
-| Фронтенд        | React 18, TypeScript, Axios        |
-| API             | REST, OpenAPI (Swagger)            |
-| Безопасность    | JWT, BCrypt                        |
-| Сборка          | Maven, Vite                        |
-| Контейнеризация | Docker (опционально)               |
-| Инструменты     | Git, Postman, JaCoCo, SonarQube    |
+| Компонент | Технология |
+|-----------|-----------|
+| Android-клиент | Kotlin, Jetpack Compose, Material Design 3 |
+| Архитектура клиента | MVVM + PCMEF, StateFlow, ViewModel |
+| Сеть (Android) | Retrofit 2, OkHttp |
+| Локальное хранилище | Room (SQLite) |
+| DI | Hilt |
+| Бэкенд | Java 17, Spring Boot 3.2 |
+| База данных | PostgreSQL 15 |
+| ORM | Spring Data JPA, Hibernate |
+| Безопасность | Spring Security, JWT |
+| API-документация | Swagger / OpenAPI 3.0 |
+| Сборка | Maven (бэкенд), Gradle (Android) |
+| Контейнеризация | Docker, docker-compose |
 
+---
 
+## Требования к окружению
 
-##  Требования к окружению
+| Требование | Версия |
+|------------|--------|
+| Java JDK | 17+ |
+| Android Studio | Hedgehog+ |
+| PostgreSQL | 15+ |
+| Maven | 3.8+ |
+| Docker | 20+ (опционально) |
+| Android SDK | API 21+ |
 
-| Требование           | Версия |
-|----------------------|--------|
-| Java JDK             |   17+  |
-| Node.js              |   18+  |
-| PostgreSQL           |   15+  |
-| Maven                |   3.8+ |
-| Docker (опционально) |   20+  |
-
-
+---
 
 ## Установка и запуск
 
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/username/course-project.git
-cd course-project
->>>>>>> 600ac1be3a62f5ffb8a548f4fae21b4978cd2dd3
+git clone https://github.com/dkhatuaeva/mindflow.git
+cd mindflow
+```
+
+### 2. Запуск бэкенда вручную
+
+```bash
+cd backend
+
+# Создать БД
+psql -U postgres -c "CREATE DATABASE mindflow_db;"
+
+# Запустить Spring Boot
+./mvnw spring-boot:run
+```
+
+Бэкенд запустится на `http://localhost:8081`  
+Swagger UI: `http://localhost:8081/swagger-ui.html`
+
+### 3. Запуск через Docker
+
+```bash
+docker-compose up -d
+```
+
+### 4. Сборка Android APK
+
+Открыть `android-app/` в Android Studio → Build → Generate Signed APK, или:
+
+```bash
+cd android-app
+./gradlew assembleDebug
+# APK: android-app/app/build/outputs/apk/debug/app-debug.apk
+```
+
+---
+
+## API Endpoints
+
+Базовый URL: `http://localhost:8081/api`
+
+| Метод | Эндпоинт | Описание | Доступ |
+|-------|---------|---------|--------|
+| POST | /auth/register | Регистрация | Публичный |
+| POST | /auth/login | Вход в систему | Публичный |
+| POST | /auth/refresh | Обновление токена | Публичный |
+| GET | /meditations | Список медитаций | USER, ADMIN |
+| GET | /meditations/{id} | Детали медитации | USER, ADMIN |
+| GET | /meditations?categoryId=1 | По категории | USER, ADMIN |
+| GET | /meditations?search=текст | Поиск | USER, ADMIN |
+| POST | /mood | Сохранить запись настроения | USER |
+| GET | /mood | История настроения | USER |
+| GET | /mood/today | Запись за сегодня | USER |
+| GET | /mood/average | Средняя оценка | USER |
+| DELETE | /mood/{id} | Удалить запись | USER |
+
+Полная документация API: [Swagger UI](http://localhost:8081/swagger-ui.html)
+
+---
+
+## Структура документации
+
+Вся документация в папке [`docs/`](docs/):
+
+| Папка | Содержимое |
+|-------|-----------|
+| [00-project-charter/](docs/00-project-charter/) | Паспорт проекта, BUC, SWOT, глоссарий, стейкхолдеры |
+| [01-requirements/](docs/01-requirements/) | Use Case, Domain Model, спецификации прецедентов |
+| [02-architecture/](docs/02-architecture/) | PCMEF, Arc42, ADR, интерфейсы |
+| [03-database/](docs/03-database/) | ER-диаграмма, DDL-скрипты, стратегия ORM |
+| [04-detailed-design/](docs/04-detailed-design/) | Sequence-диаграммы, диаграммы классов |
+| [05-implementation/](docs/05-implementation/) | Отчёт о реализации слоёв |
+| [06-testing/](docs/06-testing/) | Тест-план, JaCoCo, результаты |
+| [07-refactoring/](docs/07-refactoring/) | Анализ кода, паттерны, отчёт |
+| [08-ui/](docs/08-ui/) | Скриншоты интерфейса, UX-описание |
+| [09-api/](docs/09-api/) | OpenAPI спецификация, Postman-коллекция |
+| [10-deployment/](docs/10-deployment/) | Docker, инструкция по развёртыванию |
+| [11-user-guide/](docs/11-user-guide/) | Руководство пользователя |
+| [12-final-report/](docs/12-final-report/) | Пояснительная записка |
+
+---
+
+## Архитектура (PCMEF)
+
+Система построена на паттерне PCMEF (Presentation-Control-Mediator-Entity-Foundation).
+
+| Слой | Android | Backend | Ответственность |
+|------|---------|---------|----------------|
+| P — Presentation | Composable-функции | — | UI, отображение |
+| C — Control | ViewModel | REST Controllers | Обработка событий |
+| M — Mediator | Repository | Service | Бизнес-логика |
+| E — Entity | Data-классы | JPA Entity | Бизнес-объекты |
+| F — Foundation | Room DAO + Retrofit | JPA Repository | Доступ к данным |
+
+Подробнее: [docs/02-architecture/arc42-overview.md](docs/02-architecture/arc42-overview.md)
+
+---
+
+## Статистика разработки
+
+### Метрики Git
+
+| Метрика | Значение |
+|---------|---------|
+| Всего коммитов | 5 |
+| Период разработки | 01.05.2026 – 08.06.2026 |
+| Ветки | main |
+
+### График активности
+
+![Активность коммитов](docs/02-architecture/image.png)
+
+---
+
+## Авторы
+
+- **Хатуаева Дайана** — разработчик, документация  
+  Группа ПИЖ-б-о-23-2
+
+---
+
+## Лицензия
+
+MIT License — подробности в файле [LICENSE](LICENSE).
