@@ -1,16 +1,41 @@
 version: '3.8'
+
 services:
   postgres:
-    image: postgres:15
-    container_name: mindflow_postgres
+    image: postgres:15-alpine
+    container_name: mindflow-db
     environment:
       POSTGRES_DB: mindflow_db
       POSTGRES_USER: mindflow_user
       POSTGRES_PASSWORD: mindflow_pass
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - mindflow_data:/var/lib/postgresql/data
+      - ./docs/03-database/ddl-scripts.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mindflow_user -d mindflow_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mindflow-backend
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mindflow_db
+      SPRING_DATASOURCE_USERNAME: mindflow_user
+      SPRING_DATASOURCE_PASSWORD: mindflow_pass
+      APP_JWT_SECRET: mindflow_super_secret_key_256_bit_long_string_here_abc123
+      SERVER_PORT: 8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
 
 volumes:
   mindflow_data:
