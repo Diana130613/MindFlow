@@ -59,7 +59,10 @@ private fun soundTypeFor(name: String) = when (name) {
 
 // ── Main content composable (used as a tab) ───────────────────────────────────
 @Composable
-fun MeditationTabContent(modifier: Modifier = Modifier) {
+fun MeditationTabContent(
+    modifier: Modifier = Modifier,
+    onMeditationComplete: (Long) -> Unit = {}
+) {
     val durations = listOf(5, 10, 15, 20)
     var selectedDuration by remember { mutableStateOf(10) }
     var remainingSeconds by remember { mutableStateOf(10 * 60) }
@@ -99,6 +102,7 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
         }
         if (remainingSeconds == 0) {
             isRunning = false; isPaused = false; engine.stop()
+            onMeditationComplete(selectedDuration.toLong())
         }
     }
 

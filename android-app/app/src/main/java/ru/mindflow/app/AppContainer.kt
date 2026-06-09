@@ -12,7 +12,9 @@ import ru.mindflow.app.foundation.local.TokenManager
 import ru.mindflow.app.foundation.remote.api.MindFlowApi
 import ru.mindflow.app.foundation.remote.interceptor.AuthInterceptor
 import ru.mindflow.app.mediator.AuthRepositoryImpl
+import ru.mindflow.app.mediator.GardenRepositoryImpl
 import ru.mindflow.app.mediator.IAuthRepository
+import ru.mindflow.app.mediator.IGardenRepository
 import ru.mindflow.app.mediator.IMeditationRepository
 import ru.mindflow.app.mediator.IMoodRepository
 import ru.mindflow.app.mediator.MeditationRepositoryImpl
@@ -57,4 +59,7 @@ class AppContainer(context: Context) {
 
     val moodRepository: IMoodRepository =
         MoodRepositoryImpl(api, db.moodEntryDao())
+
+    val gardenRepository: IGardenRepository =
+        GardenRepositoryImpl(db.gardenDao())
 }
