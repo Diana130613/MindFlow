@@ -1,4 +1,4 @@
-# СТРАТЕГИЯ ORM — Маппинг Entity → Таблицы
+﻿# СТРАТЕГИЯ ORM - Маппинг Entity → Таблицы
 
 ## Инструмент: Spring Data JPA + Hibernate
 

@@ -1,4 +1,4 @@
-# РУКОВОДСТВО ПО РАЗВЁРТЫВАНИЮ
+﻿# РУКОВОДСТВО ПО РАЗВЁРТЫВАНИЮ
 
 ## Проект: MindFlow
 
@@ -169,7 +169,7 @@ cd android-app
 
 ```kotlin
 object ApiConfig {
-    // Для эмулятора: 10.0.2.2 — адрес хоста
+    // Для эмулятора: 10.0.2.2 - адрес хоста
     // Для реального устройства: IP-адрес компьютера в сети
     const val BASE_URL = "http://10.0.2.2:8081/api/"
 }
@@ -200,6 +200,6 @@ curl http://localhost:8081/api/meditations
 |-----------|-------------|---------|
 | `SPRING_DATASOURCE_URL` | jdbc:postgresql://localhost:5433/mindflow_db | URL подключения к БД |
 | `SPRING_DATASOURCE_USERNAME` | postgres | Пользователь БД |
-| `SPRING_DATASOURCE_PASSWORD` | — | Пароль БД |
-| `APP_JWT_SECRET` | — | Секретный ключ JWT (min 256 бит) |
+| `SPRING_DATASOURCE_PASSWORD` | - | Пароль БД |
+| `APP_JWT_SECRET` | - | Секретный ключ JWT (min 256 бит) |
 | `SERVER_PORT` | 8081 | Порт сервера |

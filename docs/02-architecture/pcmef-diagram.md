@@ -1,16 +1,16 @@
-# АРХИТЕКТУРА PCMEF — MindFlow
+﻿# АРХИТЕКТУРА PCMEF - MindFlow
 
 ## Адаптация PCMEF для мобильной платформы
 
 | Слой PCMEF | Реализация на Android | Реализация на Backend |
 |-----------|----------------------|----------------------|
-| **P — Presentation** | Composable-функции, Activity | — |
-| **C — Control** | ViewModel + StateFlow | REST Controllers |
-| **M — Mediator** | Repository (domain layer) | Service классы |
-| **E — Entity** | Data классы (domain) | JPA Entity классы |
-| **F — Foundation** | Room DAO + Retrofit API | JPA Repository |
+| **P - Presentation** | Composable-функции, Activity | - |
+| **C - Control** | ViewModel + StateFlow | REST Controllers |
+| **M - Mediator** | Repository (domain layer) | Service классы |
+| **E - Entity** | Data классы (domain) | JPA Entity классы |
+| **F - Foundation** | Room DAO + Retrofit API | JPA Repository |
 
-## PlantUML — Диаграмма пакетов
+## PlantUML - Диаграмма пакетов
 
 ```plantuml
 @startuml
@@ -19,7 +19,7 @@ skinparam rectangle {
   BorderColor #666666
   FontSize 12
 }
-title Архитектура PCMEF — MindFlow
+title Архитектура PCMEF - MindFlow
 
 package "Android Client" {
 
@@ -31,7 +31,7 @@ package "Android Client" {
     rectangle "BreathingScreen" as P5
   }
 
-  package "control (C — ViewModel)" #LightCyan {
+  package "control (C - ViewModel)" #LightCyan {
     rectangle "HomeViewModel" as C1
     rectangle "MeditationViewModel" as C2
     rectangle "MoodViewModel" as C3
@@ -39,7 +39,7 @@ package "Android Client" {
     rectangle "BreathingViewModel" as C5
   }
 
-  package "mediator (M — Repository)" #LightGreen {
+  package "mediator (M - Repository)" #LightGreen {
     interface "IMeditationRepository" as IM1
     interface "IMoodRepository" as IM2
     interface "IAuthRepository" as IM3
@@ -48,7 +48,7 @@ package "Android Client" {
     rectangle "AuthRepositoryImpl" as M3
   }
 
-  package "entity (E — Domain)" #LightYellow {
+  package "entity (E - Domain)" #LightYellow {
     rectangle "Meditation" as E1
     rectangle "MoodEntry" as E2
     rectangle "User" as E3
@@ -56,7 +56,7 @@ package "Android Client" {
     rectangle "UserProgress" as E5
   }
 
-  package "foundation (F — Data Sources)" #LightSalmon {
+  package "foundation (F - Data Sources)" #LightSalmon {
     rectangle "MeditationDao (Room)" as F1
     rectangle "MoodEntryDao (Room)" as F2
     rectangle "UserDao (Room)" as F3
@@ -67,14 +67,14 @@ package "Android Client" {
 
 package "Backend (Spring Boot)" {
 
-  package "control (C — Controllers)" #LightCyan {
+  package "control (C - Controllers)" #LightCyan {
     rectangle "AuthController" as BC1
     rectangle "MeditationController" as BC2
     rectangle "MoodController" as BC3
     rectangle "UserController" as BC4
   }
 
-  package "mediator (M — Services)" #LightGreen {
+  package "mediator (M - Services)" #LightGreen {
     interface "IAuthService" as BM1
     interface "IMeditationService" as BM2
     interface "IMoodService" as BM3
@@ -83,7 +83,7 @@ package "Backend (Spring Boot)" {
     rectangle "MoodServiceImpl" as BS3
   }
 
-  package "entity (E — JPA)" #LightYellow {
+  package "entity (E - JPA)" #LightYellow {
     rectangle "UserEntity" as BE1
     rectangle "MeditationEntity" as BE2
     rectangle "MoodEntryEntity" as BE3
@@ -92,7 +92,7 @@ package "Backend (Spring Boot)" {
     rectangle "CategoryEntity" as BE6
   }
 
-  package "foundation (F — Repositories)" #LightSalmon {
+  package "foundation (F - Repositories)" #LightSalmon {
     rectangle "UserRepository" as BF1
     rectangle "MeditationRepository" as BF2
     rectangle "MoodEntryRepository" as BF3
@@ -175,7 +175,7 @@ F4 --> BC3 : GET/POST /api/mood
 ```
 
 ## Описание слоёв
-*P — Presentation (Представление)*  
+*P - Presentation (Представление)*  
 Отвечает только за отображение UI.
 
 - Получает данные через UiState из ViewModel
@@ -188,7 +188,7 @@ HomeScreen
 HomeViewModel.uiState: StateFlow<HomeUiState>
 ```
 
-*C — Control (Управление)*  
+*C - Control (Управление)*  
 ViewModel на Android / Controller на Backend.
 - Принимает пользовательские события
 - Вызывает методы Mediator-слоя
@@ -203,7 +203,7 @@ fun onMeditationSelected(id: Long) {
 }
 ```
 
-*M — Mediator (Посредник)*  
+*M - Mediator (Посредник)*  
 Repository на Android / Service на Backend.
 
 - Координирует несколько источников данных
@@ -223,8 +223,8 @@ class MeditationRepositoryImpl : IMeditationRepository {
 }
 ```
 
-*E — Entity (Сущность)*  
-Доменные объекты — ядро бизнес-логики.
+*E - Entity (Сущность)*  
+Доменные объекты - ядро бизнес-логики.
 
 - Не зависят от фреймворков
 - Содержат бизнес-методы
@@ -249,8 +249,8 @@ class MeditationRepositoryImpl : IMeditationRepository {
 }  
 ```
 
-*F — Foundation (Фундамент)*  
-Доступ к данным — Room DAO, Retrofit API, DataStore.
+*F - Foundation (Фундамент)*  
+Доступ к данным - Room DAO, Retrofit API, DataStore.
 
 - Только CRUD-операции
 - Без бизнес-логики

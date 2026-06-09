@@ -1,4 +1,4 @@
-# ТАБЛИЦА ТРАССИРОВКИ ТРЕБОВАНИЙ
+﻿# ТАБЛИЦА ТРАССИРОВКИ ТРЕБОВАНИЙ
 
 ## Проект: MindFlow
 
@@ -16,8 +16,8 @@
 | BUC-05 Управление контентом | UC-09 Управление контентом | Средний | MeditationController (Admin), CategoryRepository | В разработке |
 | BUC-06 Мониторинг | UC-10 Управление пользователями | Средний | UserRepository, AuthServiceImpl | Реализовано |
 | BUC-07 Персонализация | UC-07 Управление профилем | Средний | UserRepository, AuthController | Реализовано |
-| — | UC-01 Регистрация | Высокий | AuthController, AuthServiceImpl | Реализовано |
-| — | UC-02 Вход в систему (JWT) | Высокий | AuthController, JwtUtil, SecurityConfig | Реализовано |
+| - | UC-01 Регистрация | Высокий | AuthController, AuthServiceImpl | Реализовано |
+| - | UC-02 Вход в систему (JWT) | Высокий | AuthController, JwtUtil, SecurityConfig | Реализовано |
 
 ---
 
@@ -38,7 +38,7 @@
 | UC-06 Средняя оценка | GET | /api/mood/average | ✅ |
 | UC-05 Удалить запись | DELETE | /api/mood/{id} | ✅ |
 
-**Итого эндпоинтов: 12 (требование ≥ 8 — выполнено)**
+**Итого эндпоинтов: 12 (требование ≥ 8 - выполнено)**
 
 ---
 

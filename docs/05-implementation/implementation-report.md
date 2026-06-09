@@ -1,4 +1,4 @@
-# ОТЧЁТ О РЕАЛИЗАЦИИ ЯДРА СИСТЕМЫ
+﻿# ОТЧЁТ О РЕАЛИЗАЦИИ ЯДРА СИСТЕМЫ
 
 ## Проект: MindFlow
 
@@ -9,36 +9,36 @@
 ```
 backend/
 ├── src/main/java/ru/mindflow/backend/
-│   ├── BackendApplication.java          — точка входа Spring Boot
+│   ├── BackendApplication.java          - точка входа Spring Boot
 │   ├── config/
-│   │   ├── JwtConfig.java               — конфигурация JWT-параметров
-│   │   └── SecurityConfig.java          — настройка Spring Security
-│   ├── control/                         [C — Control слой]
-│   │   ├── AuthController.java          — /api/auth/**
-│   │   ├── MeditationController.java    — /api/meditations/**
-│   │   └── MoodController.java          — /api/mood/**
-│   ├── mediator/                        [M — Mediator слой]
-│   │   ├── AuthService.java             — интерфейс
-│   │   ├── AuthServiceImpl.java         — реализация
-│   │   ├── MeditationService.java       — интерфейс
-│   │   ├── MeditationServiceImpl.java   — реализация
-│   │   ├── MoodService.java             — интерфейс
-│   │   └── MoodServiceImpl.java         — реализация
-│   ├── entity/                          [E — Entity слой]
-│   │   ├── User.java                    — пользователь + Role enum
-│   │   ├── Meditation.java              — медитация
-│   │   ├── MoodEntry.java               — запись настроения + getMoodLabel()
-│   │   ├── MeditationSession.java       — сессия медитации
-│   │   └── Category.java               — категория
-│   ├── foundation/                      [F — Foundation слой]
+│   │   ├── JwtConfig.java               - конфигурация JWT-параметров
+│   │   └── SecurityConfig.java          - настройка Spring Security
+│   ├── control/                         [C - Control слой]
+│   │   ├── AuthController.java          - /api/auth/**
+│   │   ├── MeditationController.java    - /api/meditations/**
+│   │   └── MoodController.java          - /api/mood/**
+│   ├── mediator/                        [M - Mediator слой]
+│   │   ├── AuthService.java             - интерфейс
+│   │   ├── AuthServiceImpl.java         - реализация
+│   │   ├── MeditationService.java       - интерфейс
+│   │   ├── MeditationServiceImpl.java   - реализация
+│   │   ├── MoodService.java             - интерфейс
+│   │   └── MoodServiceImpl.java         - реализация
+│   ├── entity/                          [E - Entity слой]
+│   │   ├── User.java                    - пользователь + Role enum
+│   │   ├── Meditation.java              - медитация
+│   │   ├── MoodEntry.java               - запись настроения + getMoodLabel()
+│   │   ├── MeditationSession.java       - сессия медитации
+│   │   └── Category.java               - категория
+│   ├── foundation/                      [F - Foundation слой]
 │   │   ├── UserRepository.java
 │   │   ├── MeditationRepository.java
 │   │   ├── MoodEntryRepository.java
 │   │   ├── MeditationSessionRepository.java
 │   │   └── CategoryRepository.java
 │   ├── security/
-│   │   ├── JwtUtil.java                 — генерация и валидация JWT
-│   │   ├── JwtAuthFilter.java           — фильтр Spring Security
+│   │   ├── JwtUtil.java                 - генерация и валидация JWT
+│   │   ├── JwtAuthFilter.java           - фильтр Spring Security
 │   │   └── UserDetailsServiceImpl.java
 │   └── dto/
 │       ├── LoginRequest.java / RegisterRequest.java
@@ -53,12 +53,12 @@ backend/
 
 ## 2. Реализация слоёв по PCMEF
 
-### 2.1. Entity (E) — бизнес-объекты
+### 2.1. Entity (E) - бизнес-объекты
 
 Entity-классы содержат **бизнес-методы** (не анемичные модели):
 
 ```java
-// MoodEntry.java — Entity с бизнес-методом
+// MoodEntry.java - Entity с бизнес-методом
 @Entity
 @Table(name = "mood_entries")
 public class MoodEntry {
@@ -72,7 +72,7 @@ public class MoodEntry {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Бизнес-метод Entity-слоя — поведение, а не только данные
+    // Бизнес-метод Entity-слоя - поведение, а не только данные
     public String getMoodLabel() {
         return switch (score) {
             case 9, 10 -> "Отлично";
@@ -85,12 +85,12 @@ public class MoodEntry {
 }
 ```
 
-### 2.2. Foundation (F) — доступ к данным
+### 2.2. Foundation (F) - доступ к данным
 
 Repository-интерфейсы расширяют `JpaRepository` и содержат только запросы данных:
 
 ```java
-// MeditationRepository.java — Foundation слой
+// MeditationRepository.java - Foundation слой
 public interface MeditationRepository extends JpaRepository<Meditation, Long> {
     List<Meditation> findByActiveTrue();
     List<Meditation> findByCategoryIdAndActiveTrue(Long categoryId);
@@ -102,12 +102,12 @@ public interface MeditationRepository extends JpaRepository<Meditation, Long> {
 }
 ```
 
-### 2.3. Mediator (M) — бизнес-логика
+### 2.3. Mediator (M) - бизнес-логика
 
 Service-классы координируют несколько репозиториев и содержат бизнес-логику:
 
 ```java
-// MeditationServiceImpl.java — Mediator слой
+// MeditationServiceImpl.java - Mediator слой
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -135,12 +135,12 @@ public class MeditationServiceImpl implements MeditationService {
 }
 ```
 
-### 2.4. Control (C) — контроллеры REST API
+### 2.4. Control (C) - контроллеры REST API
 
 Контроллеры принимают HTTP-запросы и делегируют в Service:
 
 ```java
-// MoodController.java — Control слой
+// MoodController.java - Control слой
 @RestController
 @RequestMapping("/api/mood")
 @RequiredArgsConstructor
@@ -164,7 +164,7 @@ public class MoodController {
 JWT-фильтр перехватывает каждый запрос и извлекает пользователя из токена:
 
 ```java
-// JwtAuthFilter.java — Spring Security Chain
+// JwtAuthFilter.java - Spring Security Chain
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {

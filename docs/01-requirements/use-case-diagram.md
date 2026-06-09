@@ -1,4 +1,4 @@
-# USE CASE ДИАГРАММА
+﻿# USE CASE ДИАГРАММА
 
 ## Системные прецеденты MindFlow
 
@@ -17,7 +17,7 @@ actor "Пользователь" as User
 actor "Администратор" as Admin
 actor "Сервер (Backend)" as Server
 
-rectangle "MindFlow — Система ментального здоровья" {
+rectangle "MindFlow - Система ментального здоровья" {
   usecase "UC-01: Регистрация" as UC01
   usecase "UC-02: Вход в систему" as UC02
   usecase "UC-03: Просмотр списка медитаций" as UC03
