@@ -58,11 +58,21 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     val fileFilter = listOf(
         "**/R.class", "**/R\$*.class", "**/BuildConfig.*",
         "**/Manifest*.*", "**/*Test*.*", "android/**/*.*",
-        "**/*\$*.*", "**/databinding/**"
+        "**/*\$*.*", "**/databinding/**",
+        // Compose UI — не тестируется unit-тестами
+        "**/presentation/screen/**",
+        "**/presentation/navigation/NavGraph*",
+        "**/ui/theme/**",
+        "**/audio/**",
+        // Android entry points без логики
+        "**/MainActivity*",
+        "**/AppContainer*",
+        "**/MindFlowDatabase*",
+        "**/TokenManager*"
     )
-    val debugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
+    val debugTree = fileTree(
+        "${layout.buildDirectory.get()}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes"
+    ) { exclude(fileFilter) }
     sourceDirectories.setFrom(files("src/main/java"))
     classDirectories.setFrom(files(debugTree))
     executionData.setFrom(fileTree(layout.buildDirectory.get()) {
@@ -109,6 +119,7 @@ dependencies {
 
     // Tests
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -157,6 +157,9 @@ fun MeditationDetailScreen(
                         Icon(Icons.Default.PlayArrow, "Начать", modifier = Modifier.size(22.dp))
                         Spacer(Modifier.width(8.dp))
                         Text("Начать медитацию", style = MaterialTheme.typography.titleMedium)
+
+
+
                     }
 
                     Spacer(Modifier.height(16.dp))
