@@ -539,10 +539,9 @@ private fun ProfileTabContent(
         if (state.loggedOut) onLoggedOut()
     }
 
-    var showEditDialog  by remember { mutableStateOf(false) }
-    var reminders       by remember { mutableStateOf(true) }
-    var notifications   by remember { mutableStateOf(true) }
-    var lightTheme      by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var reminders      by remember { mutableStateOf(true) }
+    var notifications  by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         // Header
@@ -639,13 +638,6 @@ private fun ProfileTabContent(
                     icon  = Icons.AutoMirrored.Filled.VolumeUp,
                     checked = notifications,
                     onCheckedChange = { notifications = it }
-                )
-                Spacer(Modifier.height(8.dp))
-                SettingsToggleRow(
-                    label = "Светлая тема",
-                    icon  = Icons.Default.WbSunny,
-                    checked = lightTheme,
-                    onCheckedChange = { lightTheme = it }
                 )
 
                 Spacer(Modifier.height(24.dp))
