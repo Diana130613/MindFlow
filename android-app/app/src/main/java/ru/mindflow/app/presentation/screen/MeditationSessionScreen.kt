@@ -149,10 +149,8 @@ fun MeditationTabContent(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top,
-                    modifier = Modifier.fillMaxSize()
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Spacer(Modifier.height(8.dp))
 
                     // Cloud (no line version) with swing
                     Box(
@@ -275,9 +273,9 @@ fun MeditationTabContent(
                 if (isRunning && !isPaused) {
                     androidx.compose.foundation.Canvas(Modifier.fillMaxSize()) {
                         val cx       = size.width / 2f
-                        val cy       = 110.dp.toPx()
+                        val cy       = size.height * 0.22f   // cloud center ≈ upper quarter of box
                         val spreadH  = 90.dp.toPx()
-                        val fallDist = 230.dp.toPx()
+                        val fallDist = size.height * 0.6f
                         sessionSparkles.forEach { s ->
                             val lp    = ((sparklePhase + s.phase) % 1f)
                             val alpha = when {
@@ -327,7 +325,7 @@ fun MeditationTabContent(
                     ) {
                         SessionSoundCard(
                             label    = "Белый шум",
-                            gradient = listOf(Color(0xFF8B3AA0), Color(0xFFE040C0)),
+                            imageRes = R.drawable.white_noise,
                             icon     = "🌬️",
                             selected = selectedSound in whiteNoiseSounds,
                             expanded = expandedSound == "white",
@@ -338,7 +336,7 @@ fun MeditationTabContent(
                         )
                         SessionSoundCard(
                             label    = "Звуки природы",
-                            gradient = listOf(Color(0xFF1B6B4A), Color(0xFF6BC8A0)),
+                            imageRes = R.drawable.nature_sounds,
                             icon     = "🌿",
                             selected = selectedSound in natureSounds,
                             expanded = expandedSound == "nature",
@@ -391,7 +389,10 @@ fun MeditationTabContent(
 
 @Composable
 private fun SessionSoundCard(
-    label: String, gradient: List<Color>, icon: String,
+    label: String,
+    imageRes: Int? = null,
+    gradient: List<Color> = listOf(Color(0xFF555555), Color(0xFF333333)),
+    icon: String,
     selected: Boolean, expanded: Boolean,
     modifier: Modifier = Modifier, onClick: () -> Unit
 ) {
@@ -403,9 +404,21 @@ private fun SessionSoundCard(
             androidx.compose.foundation.BorderStroke(2.dp, Color.White.copy(0.6f)) else null
     ) {
         Box(
-            modifier = Modifier.fillMaxSize().background(Brush.linearGradient(gradient)),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomStart
         ) {
+            if (imageRes != null) {
+                Image(
+                    painter = painterResource(imageRes),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                // Dark overlay for readability
+                Box(Modifier.fillMaxSize().background(Color.Black.copy(0.38f)))
+            } else {
+                Box(Modifier.fillMaxSize().background(Brush.linearGradient(gradient)))
+            }
             Box(
                 modifier = Modifier.align(Alignment.Center).size(40.dp)
                     .clip(CircleShape).background(Color.Black.copy(0.35f)),
