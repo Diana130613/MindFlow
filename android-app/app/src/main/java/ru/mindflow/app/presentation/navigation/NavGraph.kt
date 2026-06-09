@@ -25,12 +25,18 @@ fun NavGraph(
 
     NavHost(navController = navController, startDestination = startDestination) {
 
+        composable(Screen.Welcome.route) {
+            WelcomeScreen(
+                onStart = { navController.navigate(Screen.Login.route) }
+            )
+        }
+
         composable(Screen.Login.route) {
             LoginScreen(
                 viewModel = authVm,
                 onSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
                     }
                 },
                 onNavigateToRegister = { navController.navigate(Screen.Register.route) }
@@ -41,28 +47,33 @@ fun NavGraph(
             RegisterScreen(
                 viewModel = authVm,
                 onSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
+                    navController.navigate(Screen.Main.route) {
+                        popUpTo(Screen.Welcome.route) { inclusive = true }
                     }
                 },
                 onNavigateToLogin = { navController.popBackStack() }
             )
         }
 
-        composable(Screen.Home.route) {
-            HomeScreen(
-                viewModel = homeVm,
+        composable(Screen.Main.route) {
+            MainScreen(
+                homeViewModel      = homeVm,
+                moodViewModel      = moodVm,
+                profileViewModel   = profVm,
                 onNavigateToMeditations = { navController.navigate(Screen.MeditationList.route) },
-                onNavigateToMoodDiary   = { navController.navigate(Screen.MoodDiary.route) },
                 onNavigateToAnalytics   = { navController.navigate(Screen.Analytics.route) },
-                onNavigateToProfile     = { navController.navigate(Screen.Profile.route) }
+                onLoggedOut = {
+                    navController.navigate(Screen.Welcome.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
 
         composable(Screen.MeditationList.route) {
             MeditationListScreen(
                 viewModel = meditVm,
-                onNavigateBack = { navController.popBackStack() },
+                onNavigateBack   = { navController.popBackStack() },
                 onNavigateToDetail = { id ->
                     navController.navigate(Screen.MeditationDetail.createRoute(id))
                 }
@@ -81,29 +92,10 @@ fun NavGraph(
             )
         }
 
-        composable(Screen.MoodDiary.route) {
-            MoodDiaryScreen(
-                viewModel = moodVm,
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-
         composable(Screen.Analytics.route) {
             AnalyticsScreen(
                 viewModel = moodVm,
                 onNavigateBack = { navController.popBackStack() }
-            )
-        }
-
-        composable(Screen.Profile.route) {
-            ProfileScreen(
-                viewModel = profVm,
-                onNavigateBack = { navController.popBackStack() },
-                onLoggedOut = {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
             )
         }
     }

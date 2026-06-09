@@ -29,15 +29,15 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(Unit) {
                     startDestination = if (container.authRepository.isLoggedIn())
-                        Screen.Home.route
+                        Screen.Main.route
                     else
-                        Screen.Login.route
+                        Screen.Welcome.route
                 }
 
                 startDestination?.let { start ->
                     NavGraph(
-                        navController = navController,
-                        container = container,
+                        navController    = navController,
+                        container        = container,
                         startDestination = start
                     )
                 }
