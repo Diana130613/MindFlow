@@ -19,17 +19,33 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.mindflow.app.ui.theme.*
 
-// ── Data model ───────────────────────────────────────────────────────────────
+// ── Data models ───────────────────────────────────────────────────────────────
 
 private data class Lesson(
     val title: String,
     val duration: String,
     val description: String,
     val videoUrl: String
+)
+
+private data class RhythmBlock(
+    val label: String,   // "Вдох", "Задержка", "Выдох"
+    val seconds: Int,
+    val color: Color
+)
+
+private data class BreathingExercise(
+    val name: String,
+    val duration: String,
+    val tagline: String,
+    val rhythm: List<RhythmBlock>,
+    val steps: List<String>,
+    val benefits: List<String>
 )
 
 private data class CourseData(
@@ -39,7 +55,8 @@ private data class CourseData(
     val icon: String,
     val gradientStart: Color,
     val gradientEnd: Color,
-    val lessons: List<Lesson>
+    val lessons: List<Lesson> = emptyList(),
+    val breathingExercises: List<BreathingExercise>? = null
 )
 
 // ── Static course catalogue ───────────────────────────────────────────────────
@@ -113,33 +130,94 @@ private val courseCatalogue = listOf(
     ),
     CourseData(
         title        = "Дыхание и покой",
-        shortDesc    = "5-минутные практики на каждый день",
+        shortDesc    = "4 техники · от 5 до 10 минут",
         fullDesc     = "Короткие дыхательные упражнения для снятия тревоги и восстановления " +
-                "внутреннего баланса. Каждое занятие занимает не более 5–10 минут и легко " +
-                "вписывается в любой распорядок дня — утром, в перерыве или перед сном.",
+                "внутреннего баланса. Каждая техника занимает 5–10 минут и легко " +
+                "вписывается в любой распорядок — утром, в перерыве на работе или перед сном.",
         icon         = "🌊",
         gradientStart = GradBlue1,
         gradientEnd   = GradCyan1,
-        lessons = listOf(
-            Lesson(
-                "Дыхание 4-7-8", "5 мин",
-                "Вдох 4 сек → задержка 7 сек → выдох 8 сек. Мощное успокоение нервной системы.",
-                "https://www.youtube.com/results?search_query=дыхание+4-7-8+техника"
+        breathingExercises = listOf(
+            BreathingExercise(
+                name     = "Дыхание 4-7-8",
+                duration = "5 мин",
+                tagline  = "Быстрое успокоение нервной системы",
+                rhythm   = listOf(
+                    RhythmBlock("Вдох",     4, Color(0xFF42A5F5)),
+                    RhythmBlock("Задержка", 7, Color(0xFFAB47BC)),
+                    RhythmBlock("Выдох",    8, Color(0xFF26A69A))
+                ),
+                steps = listOf(
+                    "Сядьте прямо, закройте глаза",
+                    "Прижмите кончик языка к нёбу за верхними зубами",
+                    "Сделайте полный выдох через рот со звуком «фух»",
+                    "Закройте рот и вдыхайте через нос 4 секунды",
+                    "Задержите дыхание на 7 секунд",
+                    "Выдыхайте через рот со звуком «фух» 8 секунд",
+                    "Повторите цикл 4 раза"
+                ),
+                benefits = listOf("Снимает тревогу", "Улучшает сон", "Снижает давление")
             ),
-            Lesson(
-                "Коробочное дыхание", "5 мин",
-                "Техника ВМС США для быстрого снижения стресса: 4×4×4×4 секунды.",
-                "https://www.youtube.com/results?search_query=коробочное+дыхание+box+breathing"
+            BreathingExercise(
+                name     = "Коробочное дыхание",
+                duration = "5 мин",
+                tagline  = "Техника концентрации и контроля стресса",
+                rhythm   = listOf(
+                    RhythmBlock("Вдох",     4, Color(0xFF42A5F5)),
+                    RhythmBlock("Задержка", 4, Color(0xFFAB47BC)),
+                    RhythmBlock("Выдох",    4, Color(0xFF26A69A)),
+                    RhythmBlock("Пауза",    4, Color(0xFFFF7043))
+                ),
+                steps = listOf(
+                    "Примите удобное положение сидя",
+                    "Медленно выдохните весь воздух",
+                    "Вдыхайте через нос, считая до 4",
+                    "Задержите дыхание на счёт 4",
+                    "Выдыхайте через рот на счёт 4",
+                    "Сделайте паузу без воздуха на счёт 4",
+                    "Повторите 4–6 раз"
+                ),
+                benefits = listOf("Фокус и ясность ума", "Быстрый антистресс", "Используется в ВМС США")
             ),
-            Lesson(
-                "Дыхание животом", "7 мин",
-                "Активация парасимпатической нервной системы через диафрагмальное дыхание.",
-                "https://www.youtube.com/results?search_query=диафрагмальное+дыхание+упражнение"
+            BreathingExercise(
+                name     = "Дыхание животом",
+                duration = "7 мин",
+                tagline  = "Активация парасимпатической системы",
+                rhythm   = listOf(
+                    RhythmBlock("Вдох",  5, Color(0xFF42A5F5)),
+                    RhythmBlock("Выдох", 6, Color(0xFF26A69A))
+                ),
+                steps = listOf(
+                    "Лягте на спину или сядьте удобно",
+                    "Положите одну руку на грудь, другую на живот",
+                    "Вдыхайте медленно носом: живот поднимается, грудь неподвижна",
+                    "Задержите на 1–2 секунды",
+                    "Выдыхайте медленно через рот, живот опускается",
+                    "Рука на груди должна оставаться почти неподвижной",
+                    "Практикуйте 7–10 минут"
+                ),
+                benefits = listOf("Снижает кортизол", "Расслабляет мышцы", "Улучшает пищеварение")
             ),
-            Lesson(
-                "Полное расслабление", "10 мин",
-                "Нидра-практика: постепенное введение тела и ума в состояние глубокого покоя.",
-                "https://www.youtube.com/results?search_query=йога+нидра+расслабление"
+            BreathingExercise(
+                name     = "Полное расслабление",
+                duration = "10 мин",
+                tagline  = "Йога-нидра: погружение в покой",
+                rhythm   = listOf(
+                    RhythmBlock("Вдох",     4, Color(0xFF42A5F5)),
+                    RhythmBlock("Задержка", 2, Color(0xFFAB47BC)),
+                    RhythmBlock("Выдох",    6, Color(0xFF26A69A)),
+                    RhythmBlock("Пауза",    2, Color(0xFF78909C))
+                ),
+                steps = listOf(
+                    "Лягте в позу шавасана (на спине, руки вдоль тела)",
+                    "Закройте глаза и позвольте телу расслабиться",
+                    "Дышите мягко, удлиняя выдох",
+                    "Мысленно проходите по телу: пальцы ног → голени → бёдра → живот → грудь → руки → голова",
+                    "На каждой части тела делайте паузу и отпускайте напряжение",
+                    "Если появляются мысли — просто наблюдайте, не вовлекаясь",
+                    "Завершите несколькими глубокими вдохами и мягко откройте глаза"
+                ),
+                benefits = listOf("Глубокое восстановление", "Снижает бессонницу", "Уменьшает боль")
             )
         )
     )
@@ -234,30 +312,38 @@ fun CourseScreen(
                 }
             }
 
-            // Section header
-            item {
-                Box(
-                    Modifier.fillMaxWidth().background(NavyCard).padding(horizontal = 20.dp, vertical = 4.dp)
-                ) {
-                    Text(
-                        "Уроки",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = NavyGhost
-                    )
+            if (course.breathingExercises != null) {
+                // ── Breathing practice layout ──────────────────────────────
+                item {
+                    Box(Modifier.fillMaxWidth().background(NavyCard)
+                        .padding(horizontal = 20.dp, vertical = 4.dp)) {
+                        Text("Техники", style = MaterialTheme.typography.titleSmall, color = NavyGhost)
+                    }
                 }
-            }
-
-            // Lesson cards
-            itemsIndexed(course.lessons) { index, lesson ->
-                Box(Modifier.fillMaxWidth().background(NavyCard)) {
-                    LessonCard(
-                        index   = index + 1,
-                        lesson  = lesson,
-                        onWatch = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(lesson.videoUrl))
-                            context.startActivity(intent)
-                        }
-                    )
+                itemsIndexed(course.breathingExercises) { _, exercise ->
+                    Box(Modifier.fillMaxWidth().background(NavyCard)) {
+                        BreathingExerciseCard(exercise)
+                    }
+                }
+            } else {
+                // ── Video lesson layout ────────────────────────────────────
+                item {
+                    Box(Modifier.fillMaxWidth().background(NavyCard)
+                        .padding(horizontal = 20.dp, vertical = 4.dp)) {
+                        Text("Уроки", style = MaterialTheme.typography.titleSmall, color = NavyGhost)
+                    }
+                }
+                itemsIndexed(course.lessons) { index, lesson ->
+                    Box(Modifier.fillMaxWidth().background(NavyCard)) {
+                        LessonCard(
+                            index   = index + 1,
+                            lesson  = lesson,
+                            onWatch = {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(lesson.videoUrl))
+                                context.startActivity(intent)
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -355,5 +441,163 @@ private fun CourseChip(text: String) {
             style = MaterialTheme.typography.labelSmall,
             color = SkyBlue
         )
+    }
+}
+
+@Composable
+private fun BreathingExerciseCard(exercise: BreathingExercise) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape  = RoundedCornerShape(14.dp),
+            colors = CardDefaults.cardColors(containerColor = NavyBright)
+        ) {
+            Column(Modifier.padding(16.dp)) {
+
+                // ── Header ────────────────────────────────────────────────
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        exercise.name,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = NavyWhite,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Surface(shape = RoundedCornerShape(8.dp), color = NavyAccent.copy(0.5f)) {
+                        Text(
+                            exercise.duration,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = NavyWhite
+                        )
+                    }
+                }
+                Spacer(Modifier.height(2.dp))
+                Text(exercise.tagline, style = MaterialTheme.typography.bodySmall, color = SkyBlue)
+
+                Spacer(Modifier.height(14.dp))
+
+                // ── Breathing rhythm ──────────────────────────────────────
+                Text(
+                    "Ритм дыхания",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NavyGhost,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    exercise.rhythm.forEachIndexed { i, block ->
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(block.color.copy(alpha = 0.25f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "${block.seconds}с",
+                                        color = block.color,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 16.sp
+                                    )
+                                }
+                            }
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                block.label,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = NavyGhost,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        if (i < exercise.rhythm.lastIndex) {
+                            Text(
+                                "→",
+                                color = NavyGhost,
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(14.dp))
+
+                // ── Steps ─────────────────────────────────────────────────
+                Text(
+                    "Как выполнять",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NavyGhost,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.height(8.dp))
+                exercise.steps.forEachIndexed { i, step ->
+                    Row(
+                        modifier = Modifier.padding(vertical = 3.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clip(androidx.compose.foundation.shape.CircleShape)
+                                .background(NavyAccent.copy(0.6f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("${i + 1}", color = NavyWhite, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        }
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            step,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = NavyWhite,
+                            lineHeight = 19.sp,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(14.dp))
+
+                // ── Benefits ──────────────────────────────────────────────
+                Text(
+                    "Польза",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = NavyGhost,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.height(8.dp))
+                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    exercise.benefits.forEach { benefit ->
+                        Surface(
+                            shape = RoundedCornerShape(20.dp),
+                            color = GradCyan1.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                "✓ $benefit",
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF80DEEA)
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
