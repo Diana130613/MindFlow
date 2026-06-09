@@ -628,14 +628,12 @@ private fun ProfileTabContent(
 
                 SettingsToggleRow(
                     label = "Напоминания",
-                    icon  = Icons.Default.Notifications,
                     checked = reminders,
                     onCheckedChange = { reminders = it }
                 )
                 Spacer(Modifier.height(8.dp))
                 SettingsToggleRow(
                     label = "Уведомления",
-                    icon  = Icons.AutoMirrored.Filled.VolumeUp,
                     checked = notifications,
                     onCheckedChange = { notifications = it }
                 )
@@ -709,7 +707,6 @@ private fun ProfileTabContent(
 @Composable
 private fun SettingsToggleRow(
     label: String,
-    icon: ImageVector,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
@@ -724,8 +721,6 @@ private fun SettingsToggleRow(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(icon, null, tint = SkyBlue, modifier = Modifier.size(20.dp))
-            Spacer(Modifier.width(12.dp))
             Text(
                 label,
                 style    = MaterialTheme.typography.bodyMedium,
