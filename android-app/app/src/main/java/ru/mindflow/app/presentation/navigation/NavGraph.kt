@@ -26,9 +26,7 @@ fun NavGraph(
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable(Screen.Welcome.route) {
-            WelcomeScreen(
-                onStart = { navController.navigate(Screen.Login.route) }
-            )
+            WelcomeScreen(onStart = { navController.navigate(Screen.Login.route) })
         }
 
         composable(Screen.Login.route) {
@@ -57,10 +55,13 @@ fun NavGraph(
 
         composable(Screen.Main.route) {
             MainScreen(
-                homeViewModel      = homeVm,
-                moodViewModel      = moodVm,
-                profileViewModel   = profVm,
+                homeViewModel           = homeVm,
+                moodViewModel           = moodVm,
+                profileViewModel        = profVm,
                 onNavigateToMeditations = { navController.navigate(Screen.MeditationList.route) },
+                onNavigateToCourse      = { title ->
+                    navController.navigate(Screen.Course.createRoute(title))
+                },
                 onNavigateToAnalytics   = { navController.navigate(Screen.Analytics.route) },
                 onLoggedOut = {
                     navController.navigate(Screen.Welcome.route) {
@@ -72,8 +73,8 @@ fun NavGraph(
 
         composable(Screen.MeditationList.route) {
             MeditationListScreen(
-                viewModel = meditVm,
-                onNavigateBack   = { navController.popBackStack() },
+                viewModel          = meditVm,
+                onNavigateBack     = { navController.popBackStack() },
                 onNavigateToDetail = { id ->
                     navController.navigate(Screen.MeditationDetail.createRoute(id))
                 }
@@ -83,18 +84,32 @@ fun NavGraph(
         composable(
             route = Screen.MeditationDetail.route,
             arguments = listOf(navArgument("id") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getLong("id") ?: return@composable
+        ) { back ->
+            val id = back.arguments?.getLong("id") ?: return@composable
             MeditationDetailScreen(
-                id = id,
-                viewModel = meditVm,
+                id             = id,
+                viewModel      = meditVm,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
 
         composable(Screen.Analytics.route) {
             AnalyticsScreen(
-                viewModel = moodVm,
+                viewModel      = moodVm,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = Screen.Course.route,
+            arguments = listOf(navArgument("title") {
+                type = NavType.StringType; defaultValue = "Спокойствие сознания"
+            })
+        ) { back ->
+            val raw   = back.arguments?.getString("title") ?: ""
+            val title = java.net.URLDecoder.decode(raw, "UTF-8")
+            CourseScreen(
+                title          = title,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
