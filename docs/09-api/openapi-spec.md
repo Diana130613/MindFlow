@@ -1,4 +1,4 @@
-# СПЕЦИФИКАЦИЯ REST API (OpenAPI 3.0)
+﻿# СПЕЦИФИКАЦИЯ REST API (OpenAPI 3.0)
 
 ## Проект: MindFlow Backend
 
@@ -20,7 +20,7 @@ Authorization: Bearer <access_token>
 
 ## Эндпоинты
 
-### /auth — Аутентификация (публичные)
+### /auth - Аутентификация (публичные)
 
 #### POST /api/auth/register
 
@@ -80,7 +80,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### /meditations — Медитации
+### /meditations - Медитации
 
 #### GET /api/meditations
 
@@ -114,7 +114,7 @@ Authorization: Bearer <access_token>
 
 Получение медитации по идентификатору.
 
-**Path параметр:** `id` — идентификатор медитации
+**Path параметр:** `id` - идентификатор медитации
 
 **Ответ 200 OK:** MeditationDto
 
@@ -122,7 +122,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### /mood — Дневник настроения
+### /mood - Дневник настроения
 
 #### POST /api/mood
 
@@ -159,7 +159,7 @@ Authorization: Bearer <access_token>
 
 **Требует:** JWT Bearer Token
 
-**Query параметры:** `days` (default=30) — количество дней истории
+**Query параметры:** `days` (default=30) - количество дней истории
 
 **Ответ 200 OK:** `List<MoodEntryDto>`
 
@@ -207,19 +207,19 @@ Authorization: Bearer <access_token>
 
 | Код | Описание |
 |-----|---------|
-| 200 | OK — успешный запрос |
-| 201 | Created — ресурс создан |
-| 204 | No Content — успешно, без тела ответа |
-| 400 | Bad Request — ошибка валидации |
-| 401 | Unauthorized — требуется аутентификация |
-| 403 | Forbidden — нет доступа |
-| 404 | Not Found — ресурс не найден |
-| 409 | Conflict — конфликт (дублирование) |
+| 200 | OK - успешный запрос |
+| 201 | Created - ресурс создан |
+| 204 | No Content - успешно, без тела ответа |
+| 400 | Bad Request - ошибка валидации |
+| 401 | Unauthorized - требуется аутентификация |
+| 403 | Forbidden - нет доступа |
+| 404 | Not Found - ресурс не найден |
+| 409 | Conflict - конфликт (дублирование) |
 | 500 | Internal Server Error |
 
 ---
 
-## Итог: 12 эндпоинтов (требование ≥ 8 — выполнено)
+## Итог: 12 эндпоинтов (требование ≥ 8 - выполнено)
 
 | # | Метод | Путь |
 |---|-------|------|

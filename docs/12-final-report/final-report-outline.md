@@ -1,11 +1,11 @@
-# ПОЯСНИТЕЛЬНАЯ ЗАПИСКА
+﻿# ПОЯСНИТЕЛЬНАЯ ЗАПИСКА
 
-## MindFlow — Мобильное приложение для ментального здоровья и медитации
+## MindFlow - Мобильное приложение для ментального здоровья и медитации
 
 **Автор:** Хатуаева Дайана  
 **Группа:** ПИЖ-б-о-23-2  
 **Направление:** 09.03.04 Программная инженерия  
-**Траектория:** В — Мобильная разработка  
+**Траектория:** В - Мобильная разработка  
 **Год:** 2026
 
 ---
@@ -52,7 +52,7 @@
 
 ### 1.1. Описание предметной области
 
-Предметная область — ментальное здоровье и практики осознанности. Ключевые бизнес-сущности: пользователи, медитации, категории практик, сессии медитаций, записи настроения.
+Предметная область - ментальное здоровье и практики осознанности. Ключевые бизнес-сущности: пользователи, медитации, категории практик, сессии медитаций, записи настроения.
 
 Подробно: [`docs/00-project-charter/business-glossary.md`](../00-project-charter/business-glossary.md)
 
@@ -84,9 +84,9 @@
 
 ### 2.1. Модель требований
 
-- Use Case диаграмма: 12 прецедентов — [`docs/01-requirements/use-case-diagram.md`](../01-requirements/use-case-diagram.md)
-- Спецификации UC-04 и UC-05 — [`docs/01-requirements/use-case-specs.md`](../01-requirements/use-case-specs.md)
-- Domain Model: 7 сущностей — [`docs/01-requirements/domain-model.md`](../01-requirements/domain-model.md)
+- Use Case диаграмма: 12 прецедентов - [`docs/01-requirements/use-case-diagram.md`](../01-requirements/use-case-diagram.md)
+- Спецификации UC-04 и UC-05 - [`docs/01-requirements/use-case-specs.md`](../01-requirements/use-case-specs.md)
+- Domain Model: 7 сущностей - [`docs/01-requirements/domain-model.md`](../01-requirements/domain-model.md)
 
 ### 2.2. Архитектурное проектирование
 
@@ -94,7 +94,7 @@
 
 Подробно: [`docs/02-architecture/arc42-overview.md`](../02-architecture/arc42-overview.md)
 
-Архитектурные решения (ADR-001 — ADR-009): [`docs/02-architecture/adr/`](../02-architecture/adr/)
+Архитектурные решения (ADR-001 - ADR-009): [`docs/02-architecture/adr/`](../02-architecture/adr/)
 
 ### 2.3. Проектирование базы данных
 
@@ -126,10 +126,10 @@ DDL-скрипты: [`docs/03-database/ddl-scripts.sql`](../03-database/ddl-scri
 Подробно: [`docs/05-implementation/implementation-report.md`](../05-implementation/implementation-report.md)
 
 **Реализованные слои (Backend):**
-- E — 5 Entity-классов с бизнес-методами
-- F — 5 JPA-репозиториев
-- M — 3 Service-интерфейса + 3 реализации
-- C — 3 REST-контроллера (12 эндпоинтов)
+- E - 5 Entity-классов с бизнес-методами
+- F - 5 JPA-репозиториев
+- M - 3 Service-интерфейса + 3 реализации
+- C - 3 REST-контроллера (12 эндпоинтов)
 
 ### 3.3. Безопасность
 
@@ -153,15 +153,15 @@ DDL-скрипты: [`docs/03-database/ddl-scripts.sql`](../03-database/ddl-scri
 |-----|-----------|----------|
 | Модульное (Android) | JUnit 4, kotlinx-coroutines-test | **253 теста, 0 упавших** |
 | Модульное (Backend) | JUnit 5, Mockito | **36 тестов, 0 упавших** |
-| Покрытие Android — LINE | JaCoCo | **43.6 %** (требование: > 40 %) ✅ |
-| Покрытие Android — INSTRUCTION | JaCoCo | **53.8 %** ✅ |
-| Покрытие Backend — LINE | JaCoCo | **58.1 %** ✅ |
-| Покрытие Backend — INSTRUCTION | JaCoCo | **62.8 %** ✅ |
+| Покрытие Android - LINE | JaCoCo | **43.6 %** (требование: > 40 %) ✅ |
+| Покрытие Android - INSTRUCTION | JaCoCo | **53.8 %** ✅ |
+| Покрытие Backend - LINE | JaCoCo | **58.1 %** ✅ |
+| Покрытие Backend - INSTRUCTION | JaCoCo | **62.8 %** ✅ |
 
 ### Тестируемые компоненты
 
-- **ViewModels** (6 штук): AuthViewModel, HomeViewModel, MoodViewModel, MeditationViewModel, ProfileViewModel, GardenViewModel — тестирование с fake-репозиториями, проверка всех состояний (успех / ошибка)
-- **Repository** (3 штуки): GardenRepositoryImpl, MoodRepositoryImpl, MeditationRepositoryImpl — с fake DAO и fake API
+- **ViewModels** (6 штук): AuthViewModel, HomeViewModel, MoodViewModel, MeditationViewModel, ProfileViewModel, GardenViewModel - тестирование с fake-репозиториями, проверка всех состояний (успех / ошибка)
+- **Repository** (3 штуки): GardenRepositoryImpl, MoodRepositoryImpl, MeditationRepositoryImpl - с fake DAO и fake API
 - **GardenProgress**: 34 теста логики сада (уровни, цветы, декорации, полоса прогресса)
 - **Entity/DTO**: GardenEntity, MoodEntryEntity, MeditationEntity, все DTO-классы
 
@@ -256,20 +256,20 @@ MindFlow v1.0
 
 ## СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ
 
-1. Мацяшек Л. Практическая программная инженерия на основе учебного примера. — М.: Вильямс, 2021.
-2. Мартин Р. Чистая архитектура. — СПб.: Питер, 2018.
-3. Фаулер М. Шаблоны корпоративных приложений. — М.: Вильямс, 2016.
-4. Документация Spring Boot 3.2 — https://docs.spring.io/spring-boot/
-5. Документация Android Jetpack Compose — https://developer.android.com/jetpack/compose
-6. Документация Retrofit 2 — https://square.github.io/retrofit/
-7. OpenAPI Specification 3.0 — https://swagger.io/specification/
-8. RFC 7519: JSON Web Token (JWT) — https://tools.ietf.org/html/rfc7519
+1. Мацяшек Л. Практическая программная инженерия на основе учебного примера. - М.: Вильямс, 2021.
+2. Мартин Р. Чистая архитектура. - СПб.: Питер, 2018.
+3. Фаулер М. Шаблоны корпоративных приложений. - М.: Вильямс, 2016.
+4. Документация Spring Boot 3.2 - https://docs.spring.io/spring-boot/
+5. Документация Android Jetpack Compose - https://developer.android.com/jetpack/compose
+6. Документация Retrofit 2 - https://square.github.io/retrofit/
+7. OpenAPI Specification 3.0 - https://swagger.io/specification/
+8. RFC 7519: JSON Web Token (JWT) - https://tools.ietf.org/html/rfc7519
 
 ---
 
 ## ПРИЛОЖЕНИЯ
 
-**Приложение А** — Исходный код (GitHub репозиторий)  
-**Приложение Б** — DDL-скрипты базы данных [`docs/03-database/ddl-scripts.sql`](../03-database/ddl-scripts.sql)  
-**Приложение В** — Диаграммы (папка `docs/02-architecture/images/`)  
-**Приложение Г** — Результаты тестирования [`docs/06-testing/test-plan.md`](../06-testing/test-plan.md)
+**Приложение А** - Исходный код (GitHub репозиторий)  
+**Приложение Б** - DDL-скрипты базы данных [`docs/03-database/ddl-scripts.sql`](../03-database/ddl-scripts.sql)  
+**Приложение В** - Диаграммы (папка `docs/02-architecture/images/`)  
+**Приложение Г** - Результаты тестирования [`docs/06-testing/test-plan.md`](../06-testing/test-plan.md)

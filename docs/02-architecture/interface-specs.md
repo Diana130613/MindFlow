@@ -1,6 +1,6 @@
-# СПЕЦИФИКАЦИЯ ИНТЕРФЕЙСОВ МЕЖДУ СЛОЯМИ
+﻿# СПЕЦИФИКАЦИЯ ИНТЕРФЕЙСОВ МЕЖДУ СЛОЯМИ
 
-## 1. Android — Интерфейсы слоя Mediator (Repository)
+## 1. Android - Интерфейсы слоя Mediator (Repository)
 
 ### IMeditationRepository
 ```kotlin
@@ -48,7 +48,7 @@ interface IAuthRepository {
 }
 ```
 
-## 2. Backend — Интерфейсы слоя Mediator (Service)
+## 2. Backend - Интерфейсы слоя Mediator (Service)
 ### IMeditationService (Java)
 ```java
 public interface IMeditationService {
@@ -90,7 +90,7 @@ public interface IAuthService {
 }
 ```
 
-## 3. Backend — Интерфейсы слоя Foundation (Repository)
+## 3. Backend - Интерфейсы слоя Foundation (Repository)
 ```java
 public interface IMeditationRepository 
     extends JpaRepository<MeditationEntity, Long> {

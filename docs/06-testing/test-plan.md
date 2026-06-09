@@ -1,4 +1,4 @@
-# ПЛАН И ОТЧЁТ О ТЕСТИРОВАНИИ
+﻿# ПЛАН И ОТЧЁТ О ТЕСТИРОВАНИИ
 
 ## Проект: MindFlow
 
@@ -33,7 +33,7 @@ void getMoodLabel_returnsCorrectLabel_forDifferentScores() {
 }
 ```
 
-### Тест 2: MoodServiceImpl — сохранение записи
+### Тест 2: MoodServiceImpl - сохранение записи
 
 ```java
 @ExtendWith(MockitoExtension.class)
@@ -73,7 +73,7 @@ class MoodServiceImplTest {
 }
 ```
 
-### Тест 3: MeditationServiceImpl — поиск
+### Тест 3: MeditationServiceImpl - поиск
 
 ```java
 @Test
@@ -141,7 +141,7 @@ class MoodControllerIntegrationTest {
 | TC-02 | Регистрация с существующим email | email=существующий | HTTP 400 / 409 | ✅ |
 | TC-03 | Вход с правильными данными | email+password | HTTP 200, JWT токены | ✅ |
 | TC-04 | Вход с неверным паролем | неверный пароль | HTTP 401 | ✅ |
-| TC-05 | Получение медитаций без токена | — | HTTP 401 Unauthorized | ✅ |
+| TC-05 | Получение медитаций без токена | - | HTTP 401 Unauthorized | ✅ |
 | TC-06 | Получение медитаций с токеном | Bearer <token> | HTTP 200, список | ✅ |
 | TC-07 | Сохранение настроения score=7 | score=7, note="Test" | HTTP 200, MoodEntryDto | ✅ |
 | TC-08 | Сохранение настроения score=0 | score=0 | HTTP 400 (валидация) | ✅ |
@@ -188,9 +188,9 @@ app.jwt.secret=test-secret-key-for-testing-purposes-only
 
 | Класс | Тестов | Что проверяется |
 |-------|--------|----------------|
-| `MoodServiceImpl` | 12 | save, delete, getHistory, getToday, getAverage — успех и ошибки |
+| `MoodServiceImpl` | 12 | save, delete, getHistory, getToday, getAverage - успех и ошибки |
 | `MeditationServiceImpl` | 10 | getAll, getById, getByCategory, search, маппинг DTO |
-| `AuthServiceImpl` | 7 | register, login, refresh — успех и ошибки |
+| `AuthServiceImpl` | 7 | register, login, refresh - успех и ошибки |
 | `MoodEntry` (Entity) | 6 | getMoodLabel() для всех диапазонов score |
 
 ---
@@ -223,8 +223,8 @@ app.jwt.secret=test-secret-key-for-testing-purposes-only
 
 | Пакет | Что тестируется |
 |-------|----------------|
-| `entity` | Meditation, MoodEntry, User — бизнес-методы |
-| `garden` | GardenProgress — уровни, цветы, декорации (34 теста) |
+| `entity` | Meditation, MoodEntry, User - бизнес-методы |
+| `garden` | GardenProgress - уровни, цветы, декорации (34 теста) |
 | `control` | AuthViewModel, HomeViewModel, MoodViewModel, MeditationViewModel, ProfileViewModel, GardenViewModel |
 | `mediator` | MoodRepositoryImpl, MeditationRepositoryImpl, GardenRepositoryImpl (с fake DAO/API) |
 | `foundation.local.entity` | GardenEntity, MoodEntryEntity, MeditationEntity |
@@ -235,8 +235,8 @@ app.jwt.secret=test-secret-key-for-testing-purposes-only
 
 Следующие пакеты намеренно исключены (Compose UI, не поддающийся unit-тестированию):
 
-- `presentation/screen/**` — Compose-экраны
-- `presentation/navigation/NavGraph*` — навигационный граф
-- `ui/theme/**` — цвета и типография
-- `audio/**` — SoundEngine (использует AudioTrack)
+- `presentation/screen/**` - Compose-экраны
+- `presentation/navigation/NavGraph*` - навигационный граф
+- `ui/theme/**` - цвета и типография
+- `audio/**` - SoundEngine (использует AudioTrack)
 - `MainActivity`, `AppContainer`, `MindFlowDatabase`, `TokenManager`
