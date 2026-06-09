@@ -17,4 +17,7 @@ class MoodEntryTest {
     @Test fun `emoji returns smile for score 8`()    = assertEquals("🙂", entry(8).emoji())
     @Test fun `emoji returns happy for score 9`()    = assertEquals("😄", entry(9).emoji())
     @Test fun `emoji returns happy for score 10`()   = assertEquals("😄", entry(10).emoji())
+    @Test fun `emoji returns neutral for score 0`()  = assertEquals("😐", entry(0).emoji())
+    @Test fun `emoji returns neutral for negative score`() = assertEquals("😐", entry(-1).emoji())
+    @Test fun `emoji returns neutral for out of range score`() = assertEquals("😐", entry(11).emoji())
 }

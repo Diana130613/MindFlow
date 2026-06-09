@@ -24,4 +24,20 @@ class UserTest {
     @Test fun `default role is ROLE_USER`() {
         assertEquals("ROLE_USER", User("a@b.com", "Bob").role)
     }
+
+    @Test fun `displayName falls back to email when name is whitespace only`() {
+        assertEquals("a@b.com", User("a@b.com", "   ").displayName())
+    }
+
+    @Test fun `isAdmin returns false for empty role`() {
+        assertFalse(User("a@b.com", "User", "").isAdmin())
+    }
+
+    @Test fun `isAdmin is case-sensitive`() {
+        assertFalse(User("a@b.com", "User", "role_admin").isAdmin())
+    }
+
+    @Test fun `equality based on all fields`() {
+        assertEquals(User("a@b.com", "Alice", "ROLE_USER"), User("a@b.com", "Alice", "ROLE_USER"))
+    }
 }
