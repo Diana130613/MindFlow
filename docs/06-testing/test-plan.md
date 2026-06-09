@@ -161,3 +161,82 @@ spring.datasource.driver-class-name=org.h2.Driver
 spring.jpa.hibernate.ddl-auto=create-drop
 app.jwt.secret=test-secret-key-for-testing-purposes-only
 ```
+
+---
+
+## 6. Результаты тестирования Backend (Spring Boot)
+
+### 6.0. Сводка
+
+| Параметр | Значение |
+|---------|---------|
+| Всего тестов | **36** |
+| Прошли | **36** |
+| Упали | **0** |
+| Инструмент | JUnit 5, Mockito |
+| Команда запуска | `mvnw test` |
+
+### 6.0.1. Покрытие кода Backend (JaCoCo)
+
+| Метрика | Покрыто / Всего | % |
+|--------|----------------|---|
+| INSTRUCTION | 532 / 847 | **62.8 %** |
+| LINE | 125 / 215 | **58.1 %** |
+| METHOD | 34 / 60 | **56.7 %** |
+
+### 6.0.2. Тестируемые компоненты Backend
+
+| Класс | Тестов | Что проверяется |
+|-------|--------|----------------|
+| `MoodServiceImpl` | 12 | save, delete, getHistory, getToday, getAverage — успех и ошибки |
+| `MeditationServiceImpl` | 10 | getAll, getById, getByCategory, search, маппинг DTO |
+| `AuthServiceImpl` | 7 | register, login, refresh — успех и ошибки |
+| `MoodEntry` (Entity) | 6 | getMoodLabel() для всех диапазонов score |
+
+---
+
+## 7. Результаты тестирования Android-клиента
+
+### 7.1. Сводка
+
+| Параметр | Значение |
+|---------|---------|
+| Всего тестов | **253** |
+| Прошли | **253** |
+| Упали | **0** |
+| Инструмент | JUnit 4, kotlinx-coroutines-test |
+| Команда запуска | `.\gradlew testDebugUnitTest` |
+| Покрытие | `.\gradlew jacocoTestReport` |
+
+### 7.2. Покрытие кода (JaCoCo)
+
+| Метрика | Покрыто / Всего | % |
+|--------|----------------|---|
+| INSTRUCTION | 2436 / 4527 | **53.8 %** |
+| LINE | 331 / 760 | **43.6 %** |
+| BRANCH | 62 / 164 | **37.8 %** |
+| COMPLEXITY | 211 / 334 | **63.2 %** |
+| METHOD | 177 / 243 | **72.8 %** |
+| CLASS | 29 / 35 | **82.9 %** |
+
+### 7.3. Покрытые пакеты
+
+| Пакет | Что тестируется |
+|-------|----------------|
+| `entity` | Meditation, MoodEntry, User — бизнес-методы |
+| `garden` | GardenProgress — уровни, цветы, декорации (34 теста) |
+| `control` | AuthViewModel, HomeViewModel, MoodViewModel, MeditationViewModel, ProfileViewModel, GardenViewModel |
+| `mediator` | MoodRepositoryImpl, MeditationRepositoryImpl, GardenRepositoryImpl (с fake DAO/API) |
+| `foundation.local.entity` | GardenEntity, MoodEntryEntity, MeditationEntity |
+| `foundation.remote.dto` | LoginRequest, RegisterRequest, AuthResponse, MoodEntryDto, MeditationDto |
+| `presentation.navigation` | Screen.createRoute(), уникальность маршрутов |
+
+### 7.4. Исключения из подсчёта покрытия
+
+Следующие пакеты намеренно исключены (Compose UI, не поддающийся unit-тестированию):
+
+- `presentation/screen/**` — Compose-экраны
+- `presentation/navigation/NavGraph*` — навигационный граф
+- `ui/theme/**` — цвета и типография
+- `audio/**` — SoundEngine (использует AudioTrack)
+- `MainActivity`, `AppContainer`, `MindFlowDatabase`, `TokenManager`
