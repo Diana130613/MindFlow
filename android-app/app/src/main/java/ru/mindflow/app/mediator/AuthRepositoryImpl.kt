@@ -34,4 +34,10 @@ class AuthRepositoryImpl(
         val name  = tokenManager.getUserName() ?: return null
         return User(email, name)
     }
+
+    override suspend fun updateName(name: String) {
+        tokenManager.updateName(name)
+    }
+
+    override suspend fun getJoinDateMillis(): Long? = tokenManager.getJoinDateMillis()
 }

@@ -8,4 +8,6 @@ interface IAuthRepository {
     suspend fun logout()
     suspend fun isLoggedIn(): Boolean
     suspend fun getCurrentUser(): User?
+    suspend fun updateName(name: String)
+    suspend fun getJoinDateMillis(): Long?
 }
