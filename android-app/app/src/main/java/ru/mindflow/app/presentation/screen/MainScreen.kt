@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,7 +35,7 @@ import ru.mindflow.app.control.ProfileViewModel
 import ru.mindflow.app.ui.theme.*
 import java.util.Calendar
 
-private enum class MainTab { HOME, TRACKER, PROFILE }
+private enum class MainTab { HOME, TRACKER, MEDITATION, PROFILE }
 
 @Composable
 fun MainScreen(
@@ -42,6 +43,7 @@ fun MainScreen(
     moodViewModel: MoodViewModel,
     profileViewModel: ProfileViewModel,
     onNavigateToMeditations: () -> Unit,
+    onNavigateToCourse: (String) -> Unit,
     onNavigateToAnalytics: () -> Unit,
     onLoggedOut: () -> Unit
 ) {
@@ -57,18 +59,20 @@ fun MainScreen(
                 MainTab.entries.forEach { tab ->
                     NavigationBarItem(
                         selected = selectedTab == tab,
-                        onClick = { selectedTab = tab },
+                        onClick  = { selectedTab = tab },
                         icon = {
                             Icon(
                                 imageVector = when (tab) {
-                                    MainTab.HOME    -> Icons.Default.Home
-                                    MainTab.TRACKER -> Icons.Default.Mood
-                                    MainTab.PROFILE -> Icons.Default.Person
+                                    MainTab.HOME       -> Icons.Default.Home
+                                    MainTab.TRACKER    -> Icons.Default.Mood
+                                    MainTab.MEDITATION -> Icons.Default.Cloud
+                                    MainTab.PROFILE    -> Icons.Default.Person
                                 },
                                 contentDescription = when (tab) {
-                                    MainTab.HOME    -> "Главная"
-                                    MainTab.TRACKER -> "Трекер"
-                                    MainTab.PROFILE -> "Профиль"
+                                    MainTab.HOME       -> "Главная"
+                                    MainTab.TRACKER    -> "Трекер"
+                                    MainTab.MEDITATION -> "Медитация"
+                                    MainTab.PROFILE    -> "Профиль"
                                 }
                             )
                         },
@@ -89,12 +93,14 @@ fun MainScreen(
         ) {
             when (selectedTab) {
                 MainTab.HOME -> HomeTabContent(
-                    viewModel = homeViewModel,
+                    viewModel               = homeViewModel,
                     onNavigateToMeditations = onNavigateToMeditations,
-                    onNavigateToAnalytics = onNavigateToAnalytics
+                    onNavigateToCourse      = onNavigateToCourse,
+                    onNavigateToAnalytics   = onNavigateToAnalytics
                 )
-                MainTab.TRACKER -> TrackerTabContent(viewModel = moodViewModel)
-                MainTab.PROFILE -> ProfileTabContent(
+                MainTab.TRACKER    -> TrackerTabContent(viewModel = moodViewModel)
+                MainTab.MEDITATION -> MeditationTabContent()
+                MainTab.PROFILE    -> ProfileTabContent(
                     viewModel = profileViewModel,
                     onLoggedOut = onLoggedOut
                 )
@@ -109,6 +115,7 @@ fun MainScreen(
 private fun HomeTabContent(
     viewModel: HomeViewModel,
     onNavigateToMeditations: () -> Unit,
+    onNavigateToCourse: (String) -> Unit,
     onNavigateToAnalytics: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -190,37 +197,40 @@ private fun HomeTabContent(
                     Spacer(Modifier.height(16.dp))
 
                     RecommendationCard(
-                        category    = "курс",
-                        title       = "Спокойствие сознания",
-                        description = "Практический курс, который научит вас управлять своим внутренним состоянием в условиях стресса и информационной перегрузки.",
+                        category      = "курс",
+                        title         = "Спокойствие сознания",
+                        description   = "Практический видеокурс, который научит вас управлять своим внутренним состоянием в условиях постоянного стресса и информационной перегрузки.",
                         imageOnRight  = true,
                         gradientStart = GradPurple1,
                         gradientEnd   = GradPink1,
-                        onClick       = onNavigateToMeditations
+                        cardIcon      = "🌙",
+                        onClick       = { onNavigateToCourse("Спокойствие сознания") }
                     )
 
                     Spacer(Modifier.height(12.dp))
 
                     RecommendationCard(
-                        category    = "курс",
-                        title       = "Медитация — слои сознания",
-                        description = "Глубокое погружение в архитектуру собственного сознания через практику осознанности. Вы научитесь понимать, что происходит в уме во время практики.",
+                        category      = "курс",
+                        title         = "Медитация — слои сознания",
+                        description   = "Глубокое погружение в архитектуру собственного сознания через практику осознанности. Вы научитесь не просто медитировать, а понимать что именно происходит в уме.",
                         imageOnRight  = false,
                         gradientStart = GradIndigo1,
                         gradientEnd   = GradViolet1,
-                        onClick       = onNavigateToMeditations
+                        cardIcon      = "🧘",
+                        onClick       = { onNavigateToCourse("Медитация — слои сознания") }
                     )
 
                     Spacer(Modifier.height(12.dp))
 
                     RecommendationCard(
-                        category    = "практика",
-                        title       = "Дыхание и покой",
-                        description = "Короткие дыхательные упражнения для снятия тревоги и восстановления внутреннего баланса за 5 минут.",
+                        category      = "практика",
+                        title         = "Дыхание и покой",
+                        description   = "Короткие дыхательные упражнения для снятия тревоги и восстановления внутреннего баланса за 5 минут.",
                         imageOnRight  = true,
                         gradientStart = GradBlue1,
                         gradientEnd   = GradCyan1,
-                        onClick       = onNavigateToMeditations
+                        cardIcon      = "🌊",
+                        onClick       = { onNavigateToCourse("Дыхание и покой") }
                     )
 
                     Spacer(Modifier.height(20.dp))
@@ -257,6 +267,7 @@ private fun RecommendationCard(
     imageOnRight: Boolean,
     gradientStart: Color,
     gradientEnd: Color,
+    cardIcon: String = "✨",
     onClick: () -> Unit
 ) {
     Card(
@@ -270,7 +281,7 @@ private fun RecommendationCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (!imageOnRight) {
-                GradientImageBox(gradientStart, gradientEnd)
+                GradientImageBox(gradientStart, gradientEnd, cardIcon)
                 Spacer(Modifier.width(12.dp))
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -297,24 +308,23 @@ private fun RecommendationCard(
             }
             if (imageOnRight) {
                 Spacer(Modifier.width(12.dp))
-                GradientImageBox(gradientStart, gradientEnd)
+                GradientImageBox(gradientStart, gradientEnd, cardIcon)
             }
         }
     }
 }
 
 @Composable
-private fun GradientImageBox(start: Color, end: Color) {
+private fun GradientImageBox(start: Color, end: Color, icon: String = "✨") {
     Box(
         modifier = Modifier
             .size(width = 96.dp, height = 112.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(start, end)
-                )
-            )
-    )
+            .background(Brush.linearGradient(listOf(start, end))),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(icon, fontSize = 40.sp, modifier = Modifier.graphicsLayer(alpha = 0.85f))
+    }
 }
 
 // ─── Tracker Tab ─────────────────────────────────────────────────────────────
