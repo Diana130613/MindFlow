@@ -6,37 +6,32 @@
 .project
 .classpath
 
-# Java
+# Java / Maven
 *.class
 *.jar
 *.war
 *.ear
 target/
+
+# Gradle
+.gradle/
 build/
 
-# Maven
-log/
+# Logs
 *.log
+log/
 
 # Spring Boot
 application-local.properties
 application-dev.properties
 
-# Node / Frontend
-node_modules/
-dist/
-build/
-.env
-.env.local
-
-# Mobile
+# Android
 *.apk
 *.ipa
 *.keystore
 *.jks
-gradle/
-.gradle/
 local.properties
+captures/
 
 # Docker
 *.tar
@@ -45,11 +40,11 @@ local.properties
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
 # Testing
 test-output/
 
 # Documentation
 docs/**/*.tmp
+
+# Design mockups (kept locally, not in git)
+макет/
