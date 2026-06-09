@@ -75,7 +75,7 @@ fun WelcomeScreen(onStart: () -> Unit) {
                 Text("Начать", style = MaterialTheme.typography.titleMedium)
             }
 
-            Spacer(Modifier.height(48.dp))
+            Spacer(Modifier.height(120.dp))
         }
     }
 }

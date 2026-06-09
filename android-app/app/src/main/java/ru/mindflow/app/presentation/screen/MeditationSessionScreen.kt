@@ -1,7 +1,6 @@
 package ru.mindflow.app.presentation.screen
 
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,17 +26,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import ru.mindflow.app.R
+import ru.mindflow.app.audio.SoundEngine
 import ru.mindflow.app.ui.theme.*
+import kotlin.math.PI
 import kotlin.random.Random
 
-// ── Sparkle particle data (stable, created once) ─────────────────────────────
+// ── Sparkle particles (fixed, created once) ───────────────────────────────────
 private data class SparkleParticle(
-    val xRatio: Float,
-    val phase: Float,
-    val radius: Float,
-    val isStar: Boolean
+    val xRatio: Float, val phase: Float, val radius: Float, val isStar: Boolean
 )
-
 private val sessionSparkles = List(22) {
     SparkleParticle(
         xRatio = (Random.nextFloat() - 0.5f) * 2f,
@@ -47,9 +44,20 @@ private val sessionSparkles = List(22) {
     )
 }
 
-/**
- * Pure content composable — used both as a tab and as a standalone screen.
- */
+// ── Sound-name → SoundType mapping ────────────────────────────────────────────
+private fun soundTypeFor(name: String) = when (name) {
+    "Вентилятор" -> SoundEngine.SoundType.FAN
+    "Статика"    -> SoundEngine.SoundType.STATIC
+    "Ливень"     -> SoundEngine.SoundType.SHOWER
+    "Кофемашина" -> SoundEngine.SoundType.COFFEE
+    "Дождь"      -> SoundEngine.SoundType.RAIN
+    "Море"       -> SoundEngine.SoundType.SEA
+    "Лес"        -> SoundEngine.SoundType.FOREST
+    "Птицы"      -> SoundEngine.SoundType.BIRDS
+    else         -> SoundEngine.SoundType.RAIN
+}
+
+// ── Main content composable (used as a tab) ───────────────────────────────────
 @Composable
 fun MeditationTabContent(modifier: Modifier = Modifier) {
     val durations = listOf(5, 10, 15, 20)
@@ -58,51 +66,65 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
     var isRunning        by remember { mutableStateOf(false) }
     var isPaused         by remember { mutableStateOf(false) }
 
-    var selectedSound   by remember { mutableStateOf<String?>(null) }
-    var expandedSound   by remember { mutableStateOf<String?>(null) }
+    var selectedSound  by remember { mutableStateOf<String?>(null) }
+    var expandedSound  by remember { mutableStateOf<String?>(null) }
 
     val whiteNoiseSounds = listOf("Вентилятор", "Статика", "Ливень", "Кофемашина")
     val natureSounds     = listOf("Дождь", "Море", "Лес", "Птицы")
 
+    // ── Sound engine lifecycle ────────────────────────────────────────────
+    val engine = remember { SoundEngine() }
+    DisposableEffect(Unit) { onDispose { engine.stop() } }
+
+    // Start/stop audio when timer state or selection changes
+    LaunchedEffect(isRunning, isPaused, selectedSound) {
+        if (isRunning && !isPaused && selectedSound != null) {
+            engine.play(soundTypeFor(selectedSound!!))
+        } else {
+            engine.stop()
+        }
+    }
+
+    // ── Timer reset when duration changes ────────────────────────────────
     LaunchedEffect(selectedDuration) {
         remainingSeconds = selectedDuration * 60
-        isRunning = false
-        isPaused  = false
+        isRunning = false; isPaused = false
+        engine.stop()
     }
 
+    // ── Countdown ────────────────────────────────────────────────────────
     LaunchedEffect(isRunning, isPaused) {
         while (isRunning && !isPaused && remainingSeconds > 0) {
-            delay(1000L)
-            remainingSeconds--
+            delay(1000L); remainingSeconds--
         }
-        if (remainingSeconds == 0) { isRunning = false; isPaused = false }
+        if (remainingSeconds == 0) {
+            isRunning = false; isPaused = false; engine.stop()
+        }
     }
 
-    // Cloud gentle swing
-    val swingTransition = rememberInfiniteTransition(label = "swing")
-    val swingAngle by swingTransition.animateFloat(
+    // ── Animations ───────────────────────────────────────────────────────
+    val swingTr = rememberInfiniteTransition(label = "swing")
+    val swingAngle by swingTr.animateFloat(
         initialValue = -3f, targetValue = 3f,
         animationSpec = infiniteRepeatable(
-            animation  = tween(3000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ), label = "swingAngle"
+            tween(3000, easing = FastOutSlowInEasing), RepeatMode.Reverse
+        ), label = "swing"
     )
 
-    // Sparkle phase
-    val sparkleTransition = rememberInfiniteTransition(label = "sparkles")
-    val sparklePhase by sparkleTransition.animateFloat(
+    val sparkleTr = rememberInfiniteTransition(label = "sparkles")
+    val sparklePhase by sparkleTr.animateFloat(
         initialValue = 0f, targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation  = tween(2800, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ), label = "sparklePhase"
+            tween(2800, easing = LinearEasing), RepeatMode.Restart
+        ), label = "sparkPhase"
     )
 
     val progress = if (selectedDuration * 60 > 0)
-        remainingSeconds.toFloat() / (selectedDuration * 60).toFloat() else 1f
+        remainingSeconds.toFloat() / (selectedDuration * 60f) else 1f
     val minutesLeft = remainingSeconds / 60
     val secondsLeft = remainingSeconds % 60
 
+    // ── Layout ────────────────────────────────────────────────────────────
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -116,45 +138,34 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // ── Top: cloud + timer ────────────────────────────────────
+            // ── Top section: cloud + timer + controls ─────────────────────
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
+                modifier = Modifier.fillMaxWidth().weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                // Hanging string
-                Canvas(Modifier.fillMaxSize()) {
-                    drawLine(
-                        color = Color(0xFF8BB8E8).copy(alpha = 0.7f),
-                        start = Offset(size.width / 2f, 0f),
-                        end   = Offset(size.width / 2f, size.height * 0.38f),
-                        strokeWidth = 2f
-                    )
-                }
-
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top,
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    // Cloud
+                    Spacer(Modifier.height(8.dp))
+
+                    // Cloud (no line version) with swing
                     Box(
-                        modifier = Modifier
-                            .padding(top = 8.dp)
-                            .graphicsLayer { rotationZ = swingAngle },
+                        modifier = Modifier.graphicsLayer { rotationZ = swingAngle },
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(R.drawable.cloud),
+                            painter = painterResource(R.drawable.cloud_no_line),
                             contentDescription = "Облако",
-                            modifier = Modifier.width(180.dp).height(120.dp),
+                            modifier = Modifier.width(180.dp).height(110.dp),
                             contentScale = ContentScale.Fit
                         )
                     }
 
-                    Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(28.dp))
 
-                    // Circular timer
+                    // ── Circular timer ────────────────────────────────────
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -171,21 +182,21 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                                 }
                             }
                     ) {
-                        Canvas(Modifier.fillMaxSize()) {
-                            val sw = 6.dp.toPx()
+                        androidx.compose.foundation.Canvas(Modifier.fillMaxSize()) {
+                            val sw    = 6.dp.toPx()
                             val inset = sw / 2f
                             val arcSz = Size(size.width - sw, size.height - sw)
                             drawArc(
-                                color = Color.White.copy(alpha = 0.15f),
-                                startAngle = -90f, sweepAngle = 360f,
-                                useCenter = false, topLeft = Offset(inset, inset), size = arcSz,
+                                Color.White.copy(alpha = 0.15f),
+                                -90f, 360f, false,
+                                Offset(inset, inset), arcSz,
                                 style = Stroke(sw, cap = StrokeCap.Round)
                             )
                             if (isRunning || isPaused) {
                                 drawArc(
-                                    color = Color.White,
-                                    startAngle = -90f, sweepAngle = 360f * progress,
-                                    useCenter = false, topLeft = Offset(inset, inset), size = arcSz,
+                                    Color.White,
+                                    -90f, 360f * progress, false,
+                                    Offset(inset, inset), arcSz,
                                     style = Stroke(sw, cap = StrokeCap.Round)
                                 )
                             }
@@ -198,37 +209,38 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                                 )
                                 Text(
                                     if (minutesLeft > 0) "мин" else "сек",
-                                    fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f)
+                                    fontSize = 14.sp, color = Color.White.copy(0.8f)
                                 )
                                 Spacer(Modifier.height(4.dp))
                                 Text(
                                     if (isPaused) "продолжить" else "пауза",
-                                    fontSize = 11.sp, color = Color.White.copy(alpha = 0.55f)
+                                    fontSize = 11.sp, color = Color.White.copy(0.55f)
                                 )
                             } else {
                                 Text(
                                     "$selectedDuration",
                                     fontSize = 56.sp, fontWeight = FontWeight.Bold, color = Color.White
                                 )
-                                Text("минут", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+                                Text("минут", fontSize = 14.sp, color = Color.White.copy(0.8f))
                                 Spacer(Modifier.height(4.dp))
                                 Text(
                                     "нажмите для старта",
-                                    fontSize = 11.sp, color = Color.White.copy(alpha = 0.55f)
+                                    fontSize = 11.sp, color = Color.White.copy(0.55f)
                                 )
                             }
                         }
                     }
 
-                    // Duration selector
-                    Spacer(Modifier.height(20.dp))
+                    // ── Duration selector — closer to timer ───────────────
+                    Spacer(Modifier.height(12.dp))   // ↑ was 20.dp
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         durations.forEach { dur ->
                             val sel = dur == selectedDuration
                             Surface(
                                 shape = RoundedCornerShape(20.dp),
                                 color = if (sel) Color.White.copy(0.25f) else Color.White.copy(0.07f),
-                                modifier = Modifier.clip(RoundedCornerShape(20.dp))
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(20.dp))
                                     .clickable(enabled = !isRunning) { selectedDuration = dur }
                             ) {
                                 Text(
@@ -242,30 +254,32 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                         }
                     }
 
+                    // Stop button
                     if (isRunning) {
-                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.height(10.dp))
                         IconButton(onClick = {
                             isRunning = false; isPaused = false
                             remainingSeconds = selectedDuration * 60
+                            engine.stop()
                         }) {
                             Icon(Icons.Default.Stop, "Стоп", tint = Color.White.copy(0.7f))
                         }
                     }
                 }
 
-                // Sparkle overlay
+                // ── Sparkle overlay ───────────────────────────────────────
                 if (isRunning && !isPaused) {
-                    Canvas(Modifier.fillMaxSize()) {
-                        val cx = size.width / 2f
-                        val cy = 140.dp.toPx()
+                    androidx.compose.foundation.Canvas(Modifier.fillMaxSize()) {
+                        val cx       = size.width / 2f
+                        val cy       = 110.dp.toPx()
                         val spreadH  = 90.dp.toPx()
-                        val fallDist = 220.dp.toPx()
+                        val fallDist = 230.dp.toPx()
                         sessionSparkles.forEach { s ->
-                            val lp = ((sparklePhase + s.phase) % 1f)
+                            val lp    = ((sparklePhase + s.phase) % 1f)
                             val alpha = when {
                                 lp < 0.15f -> (lp / 0.15f).coerceIn(0f, 1f)
                                 lp > 0.65f -> ((1f - lp) / 0.35f).coerceIn(0f, 1f)
-                                else -> 1f
+                                else       -> 1f
                             }
                             val x = cx + s.xRatio * spreadH * (0.3f + lp * 0.7f)
                             val y = cy + lp * fallDist
@@ -296,11 +310,11 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                 }
             }
 
-            // ── Bottom: sound cards ───────────────────────────────────
+            // ── Bottom: sound cards ───────────────────────────────────────
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-                color = Color(0xFF0F1A4A).copy(alpha = 0.9f)
+                shape    = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+                color    = Color(0xFF0F1A4A).copy(alpha = 0.92f)
             ) {
                 Column(Modifier.padding(20.dp)) {
                     Row(
@@ -308,26 +322,45 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         SessionSoundCard(
-                            label = "Белый шум", gradient = listOf(Color(0xFF8B3AA0), Color(0xFFE040C0)),
-                            icon = "🌬️", selected = selectedSound in whiteNoiseSounds,
-                            expanded = expandedSound == "white", modifier = Modifier.weight(1f),
-                            onClick = { expandedSound = if (expandedSound == "white") null else "white" }
+                            label    = "Белый шум",
+                            gradient = listOf(Color(0xFF8B3AA0), Color(0xFFE040C0)),
+                            icon     = "🌬️",
+                            selected = selectedSound in whiteNoiseSounds,
+                            expanded = expandedSound == "white",
+                            modifier = Modifier.weight(1f),
+                            onClick  = {
+                                expandedSound = if (expandedSound == "white") null else "white"
+                            }
                         )
                         SessionSoundCard(
-                            label = "Звуки природы", gradient = listOf(Color(0xFF1B6B4A), Color(0xFF6BC8A0)),
-                            icon = "🌿", selected = selectedSound in natureSounds,
-                            expanded = expandedSound == "nature", modifier = Modifier.weight(1f),
-                            onClick = { expandedSound = if (expandedSound == "nature") null else "nature" }
+                            label    = "Звуки природы",
+                            gradient = listOf(Color(0xFF1B6B4A), Color(0xFF6BC8A0)),
+                            icon     = "🌿",
+                            selected = selectedSound in natureSounds,
+                            expanded = expandedSound == "nature",
+                            modifier = Modifier.weight(1f),
+                            onClick  = {
+                                expandedSound = if (expandedSound == "nature") null else "nature"
+                            }
                         )
                     }
+
                     if (expandedSound == "white") {
                         Spacer(Modifier.height(12.dp))
-                        SessionSubOptions(whiteNoiseSounds, selectedSound) { selectedSound = it; expandedSound = null }
+                        SessionSubOptions(whiteNoiseSounds, selectedSound) {
+                            selectedSound = it; expandedSound = null
+                            // Start playing immediately if timer is running
+                            if (isRunning && !isPaused) engine.play(soundTypeFor(it))
+                        }
                     }
                     if (expandedSound == "nature") {
                         Spacer(Modifier.height(12.dp))
-                        SessionSubOptions(natureSounds, selectedSound) { selectedSound = it; expandedSound = null }
+                        SessionSubOptions(natureSounds, selectedSound) {
+                            selectedSound = it; expandedSound = null
+                            if (isRunning && !isPaused) engine.play(soundTypeFor(it))
+                        }
                     }
+
                     selectedSound?.let { sound ->
                         Spacer(Modifier.height(8.dp))
                         Row(
@@ -335,7 +368,13 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("♪ Выбрано: $sound", color = NavyGhost, fontSize = 12.sp)
+                            val isPlaying = isRunning && !isPaused
+                            Text(
+                                if (isPlaying) "♪ Воспроизводится: $sound" else "♪ Выбрано: $sound",
+                                color = if (isPlaying) SkyBlue else NavyGhost,
+                                fontSize = 12.sp,
+                                fontWeight = if (isPlaying) FontWeight.SemiBold else FontWeight.Normal
+                            )
                         }
                     }
                 }
@@ -343,6 +382,8 @@ fun MeditationTabContent(modifier: Modifier = Modifier) {
         }
     }
 }
+
+// ── Sound card UI ─────────────────────────────────────────────────────────────
 
 @Composable
 private fun SessionSoundCard(
@@ -362,8 +403,8 @@ private fun SessionSoundCard(
             contentAlignment = Alignment.BottomStart
         ) {
             Box(
-                modifier = Modifier.align(Alignment.Center).size(40.dp).clip(CircleShape)
-                    .background(Color.Black.copy(0.35f)),
+                modifier = Modifier.align(Alignment.Center).size(40.dp)
+                    .clip(CircleShape).background(Color.Black.copy(0.35f)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(if (expanded) "▾" else "▶", color = Color.White, fontSize = 16.sp)
@@ -392,8 +433,8 @@ private fun SessionSubOptions(
                 Text(
                     opt,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
-                    color = if (isSel) NavyWhite else NavyGhost,
-                    fontSize = 12.sp,
+                    color      = if (isSel) NavyWhite else NavyGhost,
+                    fontSize   = 12.sp,
                     fontWeight = if (isSel) FontWeight.SemiBold else FontWeight.Normal
                 )
             }

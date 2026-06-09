@@ -17,11 +17,12 @@ fun NavGraph(
     container: AppContainer,
     startDestination: String
 ) {
+    // authVm shared between Login + Register; meditVm shared between List + Detail
+    // homeVm/moodVm kept here so moodVm can also feed AnalyticsScreen
     val authVm  = remember { AuthViewModel(container.authRepository) }
     val homeVm  = remember { HomeViewModel(container.authRepository, container.moodRepository) }
     val meditVm = remember { MeditationViewModel(container.meditationRepository) }
     val moodVm  = remember { MoodViewModel(container.moodRepository) }
-    val profVm  = remember { ProfileViewModel(container.authRepository) }
 
     NavHost(navController = navController, startDestination = startDestination) {
 
@@ -54,6 +55,9 @@ fun NavGraph(
         }
 
         composable(Screen.Main.route) {
+            // profVm created fresh here — prevents stale loggedOut = true after re-login
+            val profVm = remember { ProfileViewModel(container.authRepository) }
+
             MainScreen(
                 homeViewModel           = homeVm,
                 moodViewModel           = moodVm,
