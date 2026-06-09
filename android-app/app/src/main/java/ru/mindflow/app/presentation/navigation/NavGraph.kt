@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import ru.mindflow.app.AppContainer
 import ru.mindflow.app.control.*
 import ru.mindflow.app.presentation.screen.*
+import ru.mindflow.app.control.GardenViewModel
 
 @Composable
 fun NavGraph(
@@ -55,13 +56,15 @@ fun NavGraph(
         }
 
         composable(Screen.Main.route) {
-            // profVm created fresh here — prevents stale loggedOut = true after re-login
-            val profVm = remember { ProfileViewModel(container.authRepository) }
+            // profVm and gardenVm created fresh here — prevents stale loggedOut = true after re-login
+            val profVm   = remember { ProfileViewModel(container.authRepository) }
+            val gardenVm = remember { GardenViewModel(container.gardenRepository) }
 
             MainScreen(
                 homeViewModel           = homeVm,
                 moodViewModel           = moodVm,
                 profileViewModel        = profVm,
+                gardenViewModel         = gardenVm,
                 onNavigateToMeditations = { navController.navigate(Screen.MeditationList.route) },
                 onNavigateToCourse      = { title ->
                     navController.navigate(Screen.Course.createRoute(title))

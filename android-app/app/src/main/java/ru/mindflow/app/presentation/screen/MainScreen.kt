@@ -29,19 +29,21 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ru.mindflow.app.control.GardenViewModel
 import ru.mindflow.app.control.HomeViewModel
 import ru.mindflow.app.control.MoodViewModel
 import ru.mindflow.app.control.ProfileViewModel
 import ru.mindflow.app.ui.theme.*
 import java.util.Calendar
 
-private enum class MainTab { HOME, TRACKER, MEDITATION, PROFILE }
+private enum class MainTab { HOME, TRACKER, MEDITATION, GARDEN, PROFILE }
 
 @Composable
 fun MainScreen(
     homeViewModel: HomeViewModel,
     moodViewModel: MoodViewModel,
     profileViewModel: ProfileViewModel,
+    gardenViewModel: GardenViewModel,
     onNavigateToMeditations: () -> Unit,
     onNavigateToCourse: (String) -> Unit,
     onNavigateToAnalytics: () -> Unit,
@@ -66,12 +68,14 @@ fun MainScreen(
                                     MainTab.HOME       -> Icons.Default.Home
                                     MainTab.TRACKER    -> Icons.Default.Mood
                                     MainTab.MEDITATION -> Icons.Default.Cloud
+                                    MainTab.GARDEN     -> Icons.Default.Park
                                     MainTab.PROFILE    -> Icons.Default.Person
                                 },
                                 contentDescription = when (tab) {
                                     MainTab.HOME       -> "Главная"
                                     MainTab.TRACKER    -> "Трекер"
                                     MainTab.MEDITATION -> "Медитация"
+                                    MainTab.GARDEN     -> "Сад"
                                     MainTab.PROFILE    -> "Профиль"
                                 }
                             )
@@ -99,7 +103,10 @@ fun MainScreen(
                     onNavigateToAnalytics   = onNavigateToAnalytics
                 )
                 MainTab.TRACKER    -> TrackerTabContent(viewModel = moodViewModel)
-                MainTab.MEDITATION -> MeditationTabContent()
+                MainTab.MEDITATION -> MeditationTabContent(
+                    onMeditationComplete = { minutes -> gardenViewModel.recordMeditation(minutes) }
+                )
+                MainTab.GARDEN     -> GardenScreen(viewModel = gardenViewModel)
                 MainTab.PROFILE    -> ProfileTabContent(
                     viewModel = profileViewModel,
                     onLoggedOut = onLoggedOut
