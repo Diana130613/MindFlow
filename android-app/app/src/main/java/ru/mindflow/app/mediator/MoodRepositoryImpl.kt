@@ -44,7 +44,8 @@ class MoodRepositoryImpl(
     }
 
     override suspend fun getAverage(days: Int): Double =
-        runCatching { api.getMoodAverage(days) }.getOrDefault(0.0)
+        runCatching { api.getMoodAverage(days) }
+            .getOrElse { dao.getAverageScore() ?: 0.0 }
 
     override suspend fun syncPending() {
         val pending = dao.getPending()

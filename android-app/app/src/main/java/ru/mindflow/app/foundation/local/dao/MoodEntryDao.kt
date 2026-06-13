@@ -25,6 +25,9 @@ interface MoodEntryDao {
     @Query("DELETE FROM mood_entries WHERE id = :id")
     suspend fun deleteById(id: Long)
 
+    @Query("SELECT AVG(score) FROM mood_entries")
+    suspend fun getAverageScore(): Double?
+
     @Query("DELETE FROM mood_entries")
     suspend fun clearAll()
 }

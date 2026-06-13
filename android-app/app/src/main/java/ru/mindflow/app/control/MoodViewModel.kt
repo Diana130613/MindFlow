@@ -28,7 +28,14 @@ class MoodViewModel(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     init {
-        loadAverage()
+        // Average is derived reactively from local history — works offline,
+        // updates automatically on every add/delete without extra requests.
+        viewModelScope.launch {
+            history.collect { list ->
+                val avg = if (list.isEmpty()) 0.0 else list.map { it.score }.average()
+                _uiState.value = _uiState.value.copy(average = avg)
+            }
+        }
     }
 
     fun saveMood(score: Int, note: String?) {
@@ -37,7 +44,6 @@ class MoodViewModel(
             runCatching { repository.save(score, note) }
                 .onSuccess { entry ->
                     _uiState.value = _uiState.value.copy(isSaving = false, savedEntry = entry)
-                    loadAverage()
                 }
                 .onFailure {
                     _uiState.value = _uiState.value.copy(
@@ -55,12 +61,5 @@ class MoodViewModel(
 
     fun resetSaved() {
         _uiState.value = _uiState.value.copy(savedEntry = null)
-    }
-
-    private fun loadAverage() {
-        viewModelScope.launch {
-            val avg = runCatching { repository.getAverage(30) }.getOrDefault(0.0)
-            _uiState.value = _uiState.value.copy(average = avg)
-        }
     }
 }
