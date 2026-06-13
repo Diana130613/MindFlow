@@ -35,6 +35,7 @@ public class Meditation {
     @Column(name = "difficulty_level")
     private String difficultyLevel;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean active = true;
 

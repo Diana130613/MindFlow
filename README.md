@@ -118,6 +118,9 @@ cd android-app
 | GET | /mood/today | Запись за сегодня | USER |
 | GET | /mood/average | Средняя оценка | USER |
 | DELETE | /mood/{id} | Удалить запись | USER |
+| POST | /sessions | Сохранить сессию медитации | USER |
+| GET | /sessions/my | История сессий пользователя | USER |
+| GET | /sessions/progress | Прогресс и статистика | USER |
 
 Полная документация API: [Swagger UI](http://localhost:8081/swagger-ui.html)
 
