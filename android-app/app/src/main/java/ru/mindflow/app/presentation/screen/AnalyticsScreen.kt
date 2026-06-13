@@ -100,7 +100,7 @@ fun AnalyticsScreen(
                             color = NavyGhost
                         )
                         Spacer(Modifier.height(12.dp))
-                        MoodLineChart(entries = history.takeLast(14).reversed())
+                        MoodLineChart(entries = history.take(14).reversed())
                     }
                 }
             }
