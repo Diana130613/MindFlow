@@ -62,6 +62,15 @@ public class MoodController {
         return ResponseEntity.ok(moodService.getAverage(userId, days));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<MoodEntryDto> update(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable Long id,
+            @Valid @RequestBody MoodEntryRequest request) {
+        Long userId = getUserId(userDetails);
+        return ResponseEntity.ok(moodService.update(id, userId, request));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @AuthenticationPrincipal UserDetails userDetails,

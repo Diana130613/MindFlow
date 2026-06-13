@@ -106,12 +106,15 @@ cd android-app
 | POST | /auth/register | Регистрация | Публичный |
 | POST | /auth/login | Вход в систему | Публичный |
 | POST | /auth/refresh | Обновление токена | Публичный |
+| GET | /categories | Список категорий | USER, ADMIN |
+| GET | /categories/{id} | Категория по ID | USER, ADMIN |
 | GET | /meditations | Список медитаций | USER, ADMIN |
 | GET | /meditations/{id} | Детали медитации | USER, ADMIN |
 | GET | /meditations?categoryId=1 | По категории | USER, ADMIN |
 | GET | /meditations?search=текст | Поиск | USER, ADMIN |
 | POST | /mood | Сохранить запись настроения | USER |
 | GET | /mood | История настроения | USER |
+| PUT | /mood/{id} | Обновить запись настроения | USER |
 | GET | /mood/today | Запись за сегодня | USER |
 | GET | /mood/average | Средняя оценка | USER |
 | DELETE | /mood/{id} | Удалить запись | USER |
@@ -126,7 +129,7 @@ cd android-app
 
 | Папка | Содержимое |
 |-------|-----------|
-| [00-project-charter/](docs/00-project-charter/) | Паспорт проекта, BUC, SWOT, глоссарий, стейкхолдеры |
+| [00-project-charter/](docs/00-project-charter/) | Паспорт проекта, BUC, SWOT, глоссарий, стейкхолдеры, CJM, ROI |
 | [01-requirements/](docs/01-requirements/) | Use Case, Domain Model, спецификации прецедентов |
 | [02-architecture/](docs/02-architecture/) | PCMEF, Arc42, ADR, интерфейсы |
 | [03-database/](docs/03-database/) | ER-диаграмма, DDL-скрипты, стратегия ORM |
@@ -137,8 +140,8 @@ cd android-app
 | [08-ui/](docs/08-ui/) | Скриншоты интерфейса, UX-описание |
 | [09-api/](docs/09-api/) | OpenAPI спецификация, Postman-коллекция |
 | [10-deployment/](docs/10-deployment/) | Docker, инструкция по развёртыванию |
-| [11-user-guide/](docs/11-user-guide/) | Руководство пользователя |
-| [12-final-report/](docs/12-final-report/) | Пояснительная записка |
+| [11-user-guide/](docs/11-user-guide/) | Руководство пользователя, Руководство администратора |
+| [12-final-report/](docs/12-final-report/) | Пояснительная записка, ТЗ, WBS, Ганта, COCOMO |
 
 ---
 
@@ -166,11 +169,26 @@ cd android-app
 |---------|---------|
 | Всего коммитов | 61 |
 | Период разработки | 01.05.2026 – 09.06.2026 |
+| Средняя частота | ~3.1 коммита/неделю |
 | Ветки | main |
 | Тестов (Android) | 253 |
 | Тестов (Backend) | 36 |
 | Покрытие Android (LINE) | 43.6 % |
 | Покрытие Backend (LINE) | 58.1 % |
+
+### График активности коммитов
+
+> Скриншот из GitHub Insights → Graphs → Code Frequency  
+> _(загрузить как `docs/images/git-commit-activity.png`)_
+
+![Активность коммитов](docs/images/git-commit-activity.png)
+
+### Тепловая карта (Punch Card)
+
+> Скриншот из GitHub Insights → Graphs → Punch Card  
+> _(загрузить как `docs/images/git-punch-card.png`)_
+
+![Распределение по времени](docs/images/git-punch-card.png)
 
 ---
 

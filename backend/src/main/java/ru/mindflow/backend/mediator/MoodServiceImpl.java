@@ -57,6 +57,22 @@ public class MoodServiceImpl implements MoodService {
 
     @Override
     @Transactional
+    public MoodEntryDto update(Long id, Long userId, MoodEntryRequest request) {
+        MoodEntry entry = moodEntryRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Запись не найдена: " + id));
+
+        if (!entry.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("Нет прав для изменения этой записи");
+        }
+
+        entry.setScore(request.score());
+        entry.setNote(request.note());
+        return toDto(moodEntryRepository.save(entry));
+    }
+
+    @Override
+    @Transactional
     public void delete(Long id, Long userId) {
         MoodEntry entry = moodEntryRepository.findById(id)
                 .orElseThrow(() ->
