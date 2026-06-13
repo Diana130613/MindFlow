@@ -1,14 +1,14 @@
 package ru.mindflow.app.mediator
 
 import ru.mindflow.app.entity.User
-import ru.mindflow.app.foundation.local.TokenManager
+import ru.mindflow.app.foundation.local.ITokenStorage
 import ru.mindflow.app.foundation.remote.api.MindFlowApi
 import ru.mindflow.app.foundation.remote.dto.LoginRequest
 import ru.mindflow.app.foundation.remote.dto.RegisterRequest
 
 class AuthRepositoryImpl(
     private val api: MindFlowApi,
-    private val tokenManager: TokenManager
+    private val tokenManager: ITokenStorage
 ) : IAuthRepository {
 
     override suspend fun login(email: String, password: String): Result<User> = runCatching {
