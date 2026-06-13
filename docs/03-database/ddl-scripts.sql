@@ -50,6 +50,16 @@ CREATE TABLE IF NOT EXISTS mood_entries (
     user_id     BIGINT    NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS user_progress (
+    id              BIGSERIAL PRIMARY KEY,
+    user_id         BIGINT    NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    total_sessions  INTEGER   NOT NULL DEFAULT 0,
+    total_minutes   INTEGER   NOT NULL DEFAULT 0,
+    current_streak  INTEGER   NOT NULL DEFAULT 0,
+    longest_streak  INTEGER   NOT NULL DEFAULT 0,
+    last_session_date DATE
+);
+
 -- Индексы для оптимизации запросов
 CREATE INDEX IF NOT EXISTS idx_meditations_category ON meditations(category_id);
 CREATE INDEX IF NOT EXISTS idx_meditations_active   ON meditations(active);
