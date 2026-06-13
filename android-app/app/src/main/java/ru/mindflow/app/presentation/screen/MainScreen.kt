@@ -469,24 +469,39 @@ private fun TrackerTabContent(viewModel: MoodViewModel) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 6.dp),
+                                .padding(vertical = 2.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
                                 Text(entry.emoji(), fontSize = 20.sp)
                                 Spacer(Modifier.width(8.dp))
-                                Text(
-                                    entry.moodLabel,
-                                    color = NavyWhite,
-                                    style = MaterialTheme.typography.bodyMedium
+                                Column {
+                                    Text(
+                                        entry.moodLabel,
+                                        color = NavyWhite,
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                    if (entry.recordedAt.isNotEmpty()) {
+                                        Text(
+                                            entry.recordedAt.take(10),
+                                            color = NavyGhost,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
+                                }
+                            }
+                            IconButton(onClick = { viewModel.deleteMood(entry.id) }) {
+                                Icon(
+                                    Icons.Default.Delete,
+                                    contentDescription = "Удалить",
+                                    tint = NavyGhost,
+                                    modifier = Modifier.size(18.dp)
                                 )
                             }
-                            Text(
-                                entry.recordedAt.take(10),
-                                color = NavyGhost,
-                                style = MaterialTheme.typography.bodySmall
-                            )
                         }
                         HorizontalDivider(color = NavyBright.copy(alpha = 0.5f))
                     }
