@@ -16,11 +16,17 @@ public class MeditationSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "started_at")
+    private LocalDateTime startedAt;
+
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-    @Column(name = "duration_minutes")
-    private Integer durationMinutes;
+    @Column(name = "duration_seconds")
+    private Integer durationSeconds;
+
+    @Column(nullable = false)
+    private Boolean completed = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -32,6 +38,11 @@ public class MeditationSession {
 
     @PrePersist
     protected void onCreate() {
-        completedAt = LocalDateTime.now();
+        startedAt = LocalDateTime.now();
+    }
+
+    // Бизнес-метод: длительность в минутах для отображения
+    public int getDurationMinutes() {
+        return durationSeconds != null ? durationSeconds / 60 : 0;
     }
 }
