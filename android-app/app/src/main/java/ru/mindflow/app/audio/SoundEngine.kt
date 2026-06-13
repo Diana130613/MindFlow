@@ -90,11 +90,23 @@ private class NoiseGenerator(private val type: SoundEngine.SoundType, private va
     private var globalPhase = 0.0
     private var wavePhase   = 0.0
 
-    // Bird chirp state machine
-    private var birdTimer  = sr / 2       // samples until next state flip
-    private var birdActive = false
-    private var birdPhase  = 0.0
-    private var birdFreq   = 2500.0
+    // Bird 1 chirp state machine
+    private var birdTimer     = sr / 2
+    private var birdActive    = false
+    private var birdPhase     = 0.0
+    private var birdFreqStart = 2500.0
+    private var birdFreqEnd   = 3200.0
+    private var birdChirpLen  = 1
+    private var birdChirpPos  = 0
+
+    // Bird 2 — independent rhythm, slightly lower register
+    private var bird2Timer     = sr            // offset so they don't overlap at start
+    private var bird2Active    = false
+    private var bird2Phase     = 0.0
+    private var bird2FreqStart = 1800.0
+    private var bird2FreqEnd   = 2400.0
+    private var bird2ChirpLen  = 1
+    private var bird2ChirpPos  = 0
 
     fun fill(buf: FloatArray) = when (type) {
         SoundEngine.SoundType.STATIC  -> fillWhiteNoise(buf)
@@ -171,31 +183,65 @@ private class NoiseGenerator(private val type: SoundEngine.SoundType, private va
         }
     }
 
-    // ── Birds: chirp tones (2–4 kHz) over soft forest background ─────────────
+    // ── Birds: two independent birds with frequency sweep + envelope ─────────
     private fun fillBirds(buf: FloatArray) {
         for (i in buf.indices) {
-            // Soft background (forest)
+            // Forest background: two layered lowpasses for richer texture
             lpA = 0.96f * lpA + 0.04f * w()
-            val bg = lpA * 0.09f
+            lpB = 0.99f * lpB + 0.01f * w()
+            val bg = lpA * 0.06f + lpB * 0.03f
 
-            // Chirp state machine
+            // Bird 1 state machine
             if (--birdTimer <= 0) {
                 birdActive = !birdActive
-                birdTimer = if (birdActive) {
-                    birdFreq  = 2000.0 + Random.nextDouble() * 2000.0
-                    birdPhase = 0.0
-                    (sr * (0.04 + Random.nextDouble() * 0.10)).toInt().coerceAtLeast(1)
+                if (birdActive) {
+                    birdFreqStart = 2000.0 + Random.nextDouble() * 1500.0
+                    // sweep up or mostly down — natural bird calls tend to fall
+                    birdFreqEnd   = birdFreqStart + (Random.nextDouble() - 0.35) * 900.0
+                    birdChirpLen  = (sr * (0.05 + Random.nextDouble() * 0.12)).toInt().coerceAtLeast(1)
+                    birdChirpPos  = 0
+                    birdPhase     = 0.0
+                    birdTimer     = birdChirpLen
                 } else {
-                    (sr * (0.5 + Random.nextDouble() * 1.8)).toInt().coerceAtLeast(1)
+                    birdTimer = (sr * (0.6 + Random.nextDouble() * 2.2)).toInt().coerceAtLeast(1)
                 }
             }
 
-            val chirp = if (birdActive) {
-                birdPhase += TAU * birdFreq / sr
-                sin(birdPhase).toFloat() * 0.22f
+            val chirp1 = if (birdActive) {
+                val t    = birdChirpPos.toDouble() / birdChirpLen
+                birdChirpPos++
+                val freq = birdFreqStart + (birdFreqEnd - birdFreqStart) * t
+                birdPhase += TAU * freq / sr
+                // sin envelope: rises then falls smoothly
+                val env  = sin(t * PI).toFloat()
+                sin(birdPhase).toFloat() * env * 0.22f
             } else 0f
 
-            buf[i] = bg + chirp
+            // Bird 2 state machine
+            if (--bird2Timer <= 0) {
+                bird2Active = !bird2Active
+                if (bird2Active) {
+                    bird2FreqStart = 1500.0 + Random.nextDouble() * 1200.0
+                    bird2FreqEnd   = bird2FreqStart + (Random.nextDouble() - 0.4) * 700.0
+                    bird2ChirpLen  = (sr * (0.04 + Random.nextDouble() * 0.09)).toInt().coerceAtLeast(1)
+                    bird2ChirpPos  = 0
+                    bird2Phase     = 0.0
+                    bird2Timer     = bird2ChirpLen
+                } else {
+                    bird2Timer = (sr * (1.2 + Random.nextDouble() * 3.5)).toInt().coerceAtLeast(1)
+                }
+            }
+
+            val chirp2 = if (bird2Active) {
+                val t    = bird2ChirpPos.toDouble() / bird2ChirpLen
+                bird2ChirpPos++
+                val freq = bird2FreqStart + (bird2FreqEnd - bird2FreqStart) * t
+                bird2Phase += TAU * freq / sr
+                val env  = sin(t * PI).toFloat()
+                sin(bird2Phase).toFloat() * env * 0.16f
+            } else 0f
+
+            buf[i] = bg + chirp1 + chirp2
         }
     }
 
