@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore("mindflow_prefs")
 
-class TokenManager(private val context: Context) {
+class TokenManager(private val context: Context) : ITokenStorage {
 
     companion object {
         private val KEY_ACCESS    = stringPreferencesKey("access_token")
@@ -20,7 +20,7 @@ class TokenManager(private val context: Context) {
         private val KEY_JOIN_DATE = longPreferencesKey("join_date_millis")
     }
 
-    suspend fun saveTokens(
+    override suspend fun saveTokens(
         accessToken: String, refreshToken: String,
         email: String, name: String
     ) {
@@ -35,28 +35,28 @@ class TokenManager(private val context: Context) {
         }
     }
 
-    suspend fun updateName(name: String) {
+    override suspend fun updateName(name: String) {
         context.dataStore.edit { it[KEY_NAME] = name }
     }
 
-    suspend fun getAccessToken(): String? =
+    override suspend fun getAccessToken(): String? =
         context.dataStore.data.map { it[KEY_ACCESS] }.firstOrNull()
 
-    suspend fun getRefreshToken(): String? =
+    override suspend fun getRefreshToken(): String? =
         context.dataStore.data.map { it[KEY_REFRESH] }.firstOrNull()
 
-    suspend fun getUserEmail(): String? =
+    override suspend fun getUserEmail(): String? =
         context.dataStore.data.map { it[KEY_EMAIL] }.firstOrNull()
 
-    suspend fun getUserName(): String? =
+    override suspend fun getUserName(): String? =
         context.dataStore.data.map { it[KEY_NAME] }.firstOrNull()
 
-    suspend fun getJoinDateMillis(): Long? =
+    override suspend fun getJoinDateMillis(): Long? =
         context.dataStore.data.map { it[KEY_JOIN_DATE] }.firstOrNull()
 
-    suspend fun isLoggedIn(): Boolean = getAccessToken() != null
+    override suspend fun isLoggedIn(): Boolean = getAccessToken() != null
 
-    suspend fun clear() {
+    override suspend fun clear() {
         context.dataStore.edit { it.clear() }
     }
 }
