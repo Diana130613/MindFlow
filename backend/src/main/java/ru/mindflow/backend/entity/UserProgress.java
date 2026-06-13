@@ -20,15 +20,19 @@ public class UserProgress {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    @Builder.Default
     @Column(name = "total_sessions", nullable = false)
     private Integer totalSessions = 0;
 
+    @Builder.Default
     @Column(name = "total_minutes", nullable = false)
     private Integer totalMinutes = 0;
 
+    @Builder.Default
     @Column(name = "current_streak", nullable = false)
     private Integer currentStreak = 0;
 
+    @Builder.Default
     @Column(name = "longest_streak", nullable = false)
     private Integer longestStreak = 0;
 

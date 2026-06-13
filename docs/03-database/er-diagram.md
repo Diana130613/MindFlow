@@ -64,8 +64,20 @@ entity "mood_entries" as ME {
   * user_id : BIGINT <<FK>>
 }
 
+entity "user_progress" as UP {
+  * id : BIGSERIAL <<PK>>
+  --
+  * user_id : BIGINT <<FK, UNIQUE>>
+  * total_sessions : INTEGER
+  * total_minutes : INTEGER
+  * current_streak : INTEGER
+  * longest_streak : INTEGER
+  last_session_date : DATE
+}
+
 U ||--o{ MS : "проводит"
 U ||--o{ ME : "записывает"
+U ||--|| UP : "имеет прогресс"
 M ||--o{ MS : "используется в"
 CAT ||--o{ M : "содержит"
 
@@ -125,6 +137,17 @@ CAT ||--o{ M : "содержит"
 | note | TEXT | - | Текстовая заметка |
 | recorded_at | TIMESTAMP | DEFAULT NOW() | Дата записи |
 | user_id | BIGINT | FK → users(id), NOT NULL | Пользователь |
+
+### user_progress
+| Поле | Тип | Ограничение | Описание |
+|------|-----|-------------|---------|
+| id | BIGSERIAL | PK | Идентификатор |
+| user_id | BIGINT | FK → users(id), UNIQUE | Пользователь (1:1) |
+| total_sessions | INTEGER | NOT NULL, DEFAULT 0 | Всего завершённых сессий |
+| total_minutes | INTEGER | NOT NULL, DEFAULT 0 | Суммарные минуты практики |
+| current_streak | INTEGER | NOT NULL, DEFAULT 0 | Текущая серия дней |
+| longest_streak | INTEGER | NOT NULL, DEFAULT 0 | Наибольшая серия |
+| last_session_date | DATE | - | Дата последней сессии |
 
 ## Бизнес-правила на уровне БД
 

@@ -25,6 +25,7 @@ public class MeditationSession {
     @Column(name = "duration_seconds")
     private Integer durationSeconds;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean completed = false;
 

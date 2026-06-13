@@ -203,6 +203,109 @@ Authorization: Bearer <access_token>
 
 ---
 
+#### PUT /api/mood/{id}
+
+Обновление записи о настроении.
+
+**Требует:** JWT Bearer Token
+
+**Тело запроса:**
+```json
+{
+  "score": 8,
+  "note": "Стало лучше"
+}
+```
+
+**Ответ 200 OK:** `MoodEntryDto`
+
+**Ошибки:** `403 Forbidden` (чужая запись), `404 Not Found`
+
+---
+
+### /sessions - Сессии медитаций
+
+#### POST /api/sessions
+
+Сохранение факта завершения медитации.
+
+**Требует:** JWT Bearer Token
+
+**Тело запроса:**
+```json
+{
+  "meditationId": 3,
+  "durationSeconds": 600,
+  "completed": true
+}
+```
+
+**Ответ 201 Created:**
+```json
+{
+  "id": 1,
+  "meditationId": 3,
+  "meditationTitle": "Дыхание 4-7-8",
+  "durationSeconds": 600,
+  "completed": true,
+  "completedAt": "2026-06-13T10:30:00"
+}
+```
+
+---
+
+#### GET /api/sessions/my
+
+История сессий медитаций текущего пользователя.
+
+**Требует:** JWT Bearer Token
+
+**Ответ 200 OK:** `List<SessionDto>`
+
+---
+
+#### GET /api/sessions/progress
+
+Прогресс и статистика пользователя.
+
+**Требует:** JWT Bearer Token
+
+**Ответ 200 OK:**
+```json
+{
+  "totalSessions": 42,
+  "totalMinutes": 380,
+  "currentStreak": 5,
+  "longestStreak": 12
+}
+```
+
+---
+
+### /categories - Категории
+
+#### GET /api/categories
+
+Список всех категорий медитаций.
+
+**Ответ 200 OK:**
+```json
+[
+  { "id": 1, "name": "Стресс и тревога", "description": "...", "iconUrl": "ic_stress" }
+]
+```
+
+---
+
+#### GET /api/categories/{id}
+
+Категория по идентификатору.
+
+**Ответ 200 OK:** `CategoryDto`  
+**Ошибки:** `404 Not Found`
+
+---
+
 ## Стандартные HTTP-коды
 
 | Код | Описание |
@@ -219,7 +322,16 @@ Authorization: Bearer <access_token>
 
 ---
 
-## Итог: 12 эндпоинтов (требование ≥ 8 - выполнено)
+## Итог: 18 эндпоинтов (требование ≥ 8 — выполнено с запасом)
+
+| Группа | Кол-во |
+|--------|--------|
+| /api/auth | 3 |
+| /api/categories | 2 |
+| /api/meditations | 2 |
+| /api/mood | 5 |
+| /api/sessions | 3 |
+| **Итого** | **18** |
 
 | # | Метод | Путь |
 |---|-------|------|
