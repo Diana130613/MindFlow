@@ -179,21 +179,6 @@ cd android-app
 | Покрытие Android (LINE) | 43.6 % |
 | Покрытие Backend (LINE) | 58.1 % |
 
-### График активности коммитов
-
-> Скриншот из GitHub Insights → Graphs → Code Frequency  
-> _(загрузить как `docs/images/git-commit-activity.png`)_
-
-![Активность коммитов](docs/images/git-commit-activity.png)
-
-### Тепловая карта (Punch Card)
-
-> Скриншот из GitHub Insights → Graphs → Punch Card  
-> _(загрузить как `docs/images/git-punch-card.png`)_
-
-![Распределение по времени](docs/images/git-punch-card.png)
-
----
 
 ## Лицензия
 
