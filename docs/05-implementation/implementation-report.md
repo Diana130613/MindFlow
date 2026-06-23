@@ -194,7 +194,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 | REST API эндпоинтов | ≥ 8 | 12 |
 | JWT-аутентификация | Обязательно | ✅ |
 | PCMEF архитектура | Обязательно | ✅ (4 пакета: control, mediator, entity, foundation) |
-| Тесты (покрытие) | > 40% | В разработке |
+| Тесты (покрытие) | > 40% | ✅ Выполнено |
 
 ---
 
