@@ -240,6 +240,9 @@ class FakeMoodDao2 : MoodEntryDao {
         entries.clear()
         _flow.value = emptyList()
     }
+    override suspend fun getAverageScore(): Double? {
+        return entries.values.map { it.score }.average().takeIf { it.isFinite() }
+    }
 }
 
 class FakeMeditationDao2 : MeditationDao {

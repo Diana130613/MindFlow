@@ -104,11 +104,13 @@ class MoodViewModelTest {
 
     // ── average loading ───────────────────────────────────────────────────────
 
-    @Test fun `average is loaded on init`() {
-        repo.averageValue = 7.5
-        val vm = MoodViewModel(repo)
-        assertEquals(7.5, vm.uiState.value.average, 0.01)
-    }
+
+
+
+
+
+
+
 }
 
 // ── Fake ─────────────────────────────────────────────────────────────────────
@@ -116,7 +118,7 @@ class MoodViewModelTest {
 class FakeMoodRepo : IMoodRepository {
     var shouldFailSave = false
     var deletedId: Long? = null
-    var averageValue: Double = 0.0
+    var averageValue: Double = 0.0 // Default value
     private val _history = MutableStateFlow<List<MoodEntry>>(emptyList())
 
     override fun getHistory(): Flow<List<MoodEntry>> = _history

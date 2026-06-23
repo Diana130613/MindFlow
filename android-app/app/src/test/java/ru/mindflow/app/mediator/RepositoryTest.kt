@@ -237,6 +237,7 @@ class FakeMeditationDao : MeditationDao {
         stored.clear()
         _flow.value = emptyList()
     }
+    // Удаляем метод getAverageScore(), так как его нет в интерфейсе MeditationDao
 }
 
 class FakeMoodDao : MoodEntryDao {
@@ -263,5 +264,8 @@ class FakeMoodDao : MoodEntryDao {
     override suspend fun clearAll() {
         entries.clear()
         _flow.value = emptyList()
+    }
+    override suspend fun getAverageScore(): Double? {
+        return entries.values.map { it.score }.average().takeIf { it.isFinite() }
     }
 }
