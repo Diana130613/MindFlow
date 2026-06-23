@@ -187,6 +187,13 @@ cd android-app
 
 ![тепловая карта](images/тепловая_карта.PNG)
 
+## Автор
+
+Хатуаева Дайана Тныбековна - разработчик, документация
+
+
+Группа [ПИЖ-б-о-23-2], Email: [dana.khatuaeva@gmail.com], GitHub: [Diana130613]
+
 ## Лицензия
 
 MIT License - подробности в файле [LICENSE](LICENSE).
